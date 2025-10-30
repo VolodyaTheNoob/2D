@@ -3,9 +3,12 @@ export class Render{
         this._Objects = ObjectsToRender;
         this.RenderFunction = RenderFunction;
         this.RenderArgs = RenderArgs;
+        this.IsRendering = true;
     }
-    Start(){
-        this.RenderFunction(this._Objects,this.RenderArgs);
+    Render(){
+        if(this.IsRendering){
+            this.RenderFunction(this._Objects,this.RenderArgs);
+        }
     }
     AttachRenderFunction(FuncToAttach, FuncArgs){
         this.RenderFunction = FuncToAttach;
@@ -26,6 +29,13 @@ export class Render{
             this._Objects[PosY] = undefined;
         }else{
             this._Objects[PosY][PosX] = undefined;
+        }
+    }
+    ChangeRenderState(){
+        if(this.IsRendering){
+            this.IsRendering = false;
+        }else{
+            this.IsRendering = true;
         }
     }
 }
