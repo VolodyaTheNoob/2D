@@ -38,6 +38,15 @@ class TileMap{
     GetTiles(){
         return this.Tiles;
     }
+    GetTileByIndex(X,Y){
+        return this.Tiles[Y][X];
+    }
+    SetTileMap(NewTileMap){
+        this.Tiles = NewTileMap;
+    }
+    SetNetTileByIndex(X,Y,NewTile){
+        this.Tiles[Y][X] = NewTile;
+    }
 }
 
 function RenderTileMap(TileMap){
