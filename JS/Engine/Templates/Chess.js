@@ -11,6 +11,7 @@ export function Chess(){
         console.log("Unable to load constants");
     });
     ConstantsModulePromise.then(()=>{
+        //Local constants
         const BlackTile = new Tile(CONST.BlackTexture,CONST.SizeX,CONST.SizeY);
         const WhiteTile = new Tile(CONST.WhiteTexture,CONST.SizeX,CONST.SizeY);
         const ChessBoardSize = 8;
@@ -29,7 +30,29 @@ export function Chess(){
         RenderTileMap(BlackWihteTileMap);
         let ChessBoardRender = new Render(BlackWihteTileMap,RenderTileMap);
         ChessBoardRender.Render();
-    });   
+        class Input{
+            constructor(){
+                this.EventCallbackResult = new Object();
+                this.EventFunctions = new Object();
+            }
+            AddEventFunction(event,func){
+                this.EventFunctions[event]= func;
+                this.EventCallbackResult[event] = new Object();
+                this.EventFunctions[event](this);
+            }
+        }
+        let UserInput = new Input();
+        UserInput.AddEventFunction("mousemove",GetUserMouseCoordinates,UserInput);
+        function GetUserMouseCoordinates(InputClass){
+            let MouseCoordinatesObjects = new Object();
+            CONST.MainSceneDOM.addEventListener("mousemove",  (e) =>{
+                MouseCoordinatesObjects["X"] = e.clientX;
+                MouseCoordinatesObjects["Y"] = e.clientY;
+                InputClass.EventCallbackResult["mousemove"] = MouseCoordinatesObjects;
+            });
+        }
+    });
+    //Local functions
     function RenderTileMap(TileMap){
         let _TileMap = TileMap.GetTiles();
         for(let y = 0; y < TileMap.SizeY;y++){
