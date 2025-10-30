@@ -12,8 +12,8 @@ export const MainSceneBackBufferDOM = document.getElementById(MainSceneBackBuffe
 export const MainSceneBackBufferContext = MainSceneBackBufferDOM.getContext("2d");
 
 //DeffaultSize for Textures
-export const SizeX = 32;
-export const SizeY = 32;
+export const SizeX = 64;
+export const SizeY = 64;
 
 //Creating WhiteSquareTexture
 export let WhiteColor;
