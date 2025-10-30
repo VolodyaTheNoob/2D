@@ -10,4 +10,13 @@ export class Texture{
     SetTeture(NewImage){
         this.Image = NewImage;
     }
+    GetSizeX(){
+        return this.SizeX;
+    }
+    GetSizeY(){
+        return this.SizeY;
+    }
+    GetSize(){
+        return [this.SizeX,this.SizeY];
+    }
 }

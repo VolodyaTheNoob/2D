@@ -31,4 +31,13 @@ export class Sprite{
     SetY(Y){
         this.PositionY = Y;
     }
+    GetSize(){
+        return this.Texture.GetSize();
+    }
+    GetSizeX(){
+        return this.Texture.GetSizeX();
+    }
+    GetSizeY(){
+        return this.Texture.GetSizeY();
+    }
 }

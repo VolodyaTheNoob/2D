@@ -1,8 +1,9 @@
 import { RGBA } from "./RGBA.mjs";
+import { MainSceneBackBufferID,MainSceneBackBufferDOM,MainSceneBackBufferContext} from "../Constants.mjs";
 
 export class ColorImage{
     constructor(_RGBA,SizeX,SizeY){
-        this.RGBA = new RGBA([_RGBA.Get()]); //RGBA Class
+        this.RGBA = _RGBA; //RGBA Class
         this.SizeX = SizeX;
         this.SizeY = SizeY;
         this.Size = this.SizeX * this.SizeY;
@@ -18,7 +19,7 @@ export class ColorImage{
             Data[i + 2] = this.RGBA.B; 
             Data[i + 3] = this.RGBA.A; 
         }
-        this.ImageData = new ImageData(this.Data,this.SizeX); // this.SizeX - width of ImageData
+        this.ImageData = new ImageData(Data,this.SizeX); // this.SizeX - width of ImageData
     }
     GetImage(){
         return this.ImageData;
