@@ -37,7 +37,7 @@ export let BlueImage;
 export let BlueTexture;
 
 export const ConstantsLoader = new ModuleLoader("./Graphics/Graphics.mjs",CreateGraphicsConstants);
-function CreateGraphicsConstants() {
+export function CreateGraphicsConstants() {
     //Creating WhiteSquareTexture
     WhiteColor = new RGBA(255,255,255,255);
     WhiteImage = new ColorImage(WhiteColor,SizeX,SizeY);
