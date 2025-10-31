@@ -11,7 +11,7 @@ export class ColorImage{
         this.ImageData;
         this.CreateImage();
     }
-    CreateImage(){
+    async CreateImage(){
         let Data = this.Data;
         for (let i = 0; i < Data.length; i += 4) {
             Data[i] = this.RGBA.R; 
@@ -26,26 +26,32 @@ export class ColorImage{
     }
 }
 export class DeffaultImage{
-    constructor(ImgSrc,SizeX,SizeY){
+    constructor(ImgSrc = undefined,SizeX = undefined,SizeY = undefined){
         this.SizeX = SizeX;
         this.SizeY = SizeY;
         this.Size = this.SizeX * this.SizeY;
         this.ImageData;
-        this.CreateImage(ImgSrc);
         this.IsLoaded = false;
+        if(ImgSrc !== undefined){
+            this.CreateImage(ImgSrc);
+        }
     }
-    CreateImage(ImgSrc){
-        let Img = new Image();
-        Img.src = ImgSrc;
-        Img.onload = () =>{
+
+    async CreateImage(Img){
             MainSceneBackBufferContext.drawImage(Img,0,0);
             this.ImageData = MainSceneBackBufferContext.getImageData(0, 0, this.SizeX, this.SizeY);
-            this.IsLoaded = true;
-        }    
+            MainSceneBackBufferContext.clearRect(0,0,this.SizeX, this.SizeY);
+            this.IsLoaded = true;;
     }
     GetImage(){
         if(this.IsLoaded){
             return this.ImageData;
+        }else{
+            return "not loaded";
         }
     }
 }
+
+export async function LoadImage(url) {
+        return new Promise(r => { let i = new Image(); i.onload = (() => r(i)); i.src = url; });
+    }

@@ -4,7 +4,7 @@ export class ModuleLoader{
         this.Func = AttachFunc;
         this.Args = FuncArgc;
     }
-    async LoadModule(ModulePath) {
+    async LoadModule() {
         const myModule = await import(this.Path);
         this.Func(this.Args);
     }

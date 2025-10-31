@@ -1,15 +1,19 @@
 export class Sprite{
-    constructor(SpriteTexture, PosX = undefined,PosY = undefined){
+    constructor(SpriteTexture = undefined, PosX = undefined,PosY = undefined){
         this.Texture = SpriteTexture;
-        this.SizeX = SpriteTexture.SizeX;
-        this.SizeY = SpriteTexture.SizeY;
+        if(SpriteTexture !== undefined){
+            this.SizeX = SpriteTexture.SizeX;
+            this.SizeY = SpriteTexture.SizeY;
+        }
         this.PositionX = PosX;
         this.PositionY = PosY;
     }
     GetTexture(){
-        return this.Texture.GetTexture();
+        if(this.Texture !== undefined){
+            return this.Texture.GetTexture();
+        }
     }
-    SetTexture(NewTexture){
+    async SetTexture(NewTexture){
         this.Texture = NewTexture;
     }
     GetPosition(){

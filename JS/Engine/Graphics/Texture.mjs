@@ -1,13 +1,15 @@
 export class Texture{
-    constructor(Image,SizeX = 16,SizeY = 16){
+    constructor(Image = undefined,SizeX = undefined,SizeY = undefined){
         this.Image = Image;
         this.SizeX = SizeX;
         this.SizeY = SizeY;
     }
     GetTexture(){
-        return this.Image.GetImage();
+        if(this.Image !== undefined){
+            return this.Image.GetImage();
+        }
     }
-    SetTeture(NewImage){
+    async SetTexture(NewImage){
         this.Image = NewImage;
     }
     GetSizeX(){

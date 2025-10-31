@@ -5,15 +5,6 @@ import * as CONST from "./JS/Engine/Constants.mjs";
 import { Render } from "./JS/Engine/Engine/Render.mjs";
 
 //I guess there will be start of main code - its will start works after loading all stuff - so in future i will refactor LoaderClass
-const ConstantsModulePromise = CONST.ConstantsLoader.LoadModule();
-ConstantsModulePromise.catch(() =>{
-    console.log("Unable to load constants");
-});
-ConstantsModulePromise.then(()=>{
-    class PlayerInput{
-
-    }
-});
 
 
 
