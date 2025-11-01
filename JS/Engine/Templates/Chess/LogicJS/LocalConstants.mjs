@@ -4,12 +4,21 @@ import * as ENGINE from "../EngineImports.mjs";
 import { ChessPeace } from "./ChessPeace.mjs";
 
 //Constants
+//GameDeffaultSizes
 export const [SizeX,SizeY] = [CONST.SizeX,CONST.SizeY];
-export let BlackTile;
-export let WhiteTile;
+//Default board colors
+const FirstColor = new ENGINE.RGBA(50,50,50,255);
+export let FirstColorImage;
+export let FirstColorTexture;
+const SecondColor = new ENGINE.RGBA(200,200,200,255);
+export let SecondColorImage;
+export let SecondColorTexture;
+
+export let FirstTile;
+export let SecondTile;
 export const ChessBoardSize = 8;
 export let Tiles;
-export let BlackWihteTileMap;
+export let TileMap;
 //White Peaces
 //White King
 const WhiteKingSRC = "../../../../../Textures/ChessPeaces/w-king.png";
@@ -74,24 +83,26 @@ export const BlackPawnTexture = new ENGINE.Texture(undefined,SizeX,SizeY);
 export const BlackPawn = new ChessPeace(undefined,0,0,0);
 //Loaders
 export const ConstantsLoader = new ModuleLoader("./Graphics/Graphics.mjs",CONST.CreateGraphicsConstants);
-export const LocalConstLoader = new ModuleLoader("./Templates/Chess/LogicJS/LocalConstants.mjs",CreateLocalConstants);
-
 //Dynamic constants
-export async function CreateLocalConstants(){
+export async function CreateChessBoardData(){
     //CreatingChessBoard
-    BlackTile = new ENGINE.Tile(CONST.BlackTexture,CONST.SizeX,CONST.SizeY);
-    WhiteTile = new ENGINE.Tile(CONST.WhiteTexture,CONST.SizeX,CONST.SizeY);
+    FirstColorImage = new ENGINE.ColorImage(FirstColor,SizeX,SizeY)
+    FirstColorTexture = new ENGINE.Texture(FirstColorImage,SizeX,SizeY);
+    FirstTile = new ENGINE.Tile(FirstColorTexture,SizeX,SizeY);
+    SecondColorImage = new ENGINE.ColorImage(SecondColor,SizeX,SizeY)
+    SecondColorTexture = new ENGINE.Texture(SecondColorImage,SizeX,SizeY);
+    SecondTile = new ENGINE.Tile(SecondColorTexture,SizeX,SizeY);
     Tiles = [
-        [BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile],
-        [WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile],
-        [BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile],
-        [WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile],
-        [BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile],
-        [WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile],
-        [BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile],
-        [WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile,WhiteTile,BlackTile]
+        [FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile],
+        [SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile],
+        [FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile],
+        [SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile],
+        [FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile],
+        [SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile],
+        [FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile],
+        [SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile]
     ];
-    BlackWihteTileMap = new ENGINE.TileMap([CONST.SizeX,CONST.SizeY],[ChessBoardSize,ChessBoardSize],Tiles);
+    TileMap = new ENGINE.TileMap([CONST.SizeX,CONST.SizeY],[ChessBoardSize,ChessBoardSize],Tiles);
 }
 
 export async function LoadChessTextures(){
@@ -148,13 +159,12 @@ export async function LoadChessTextures(){
 }
 
 export const ConstantsModulePromise = ConstantsLoader.LoadModule;
-export const LocalConstantsModulePromise = LocalConstLoader.LoadModule;
 
 //Loaders wrap
 export async function LoadAllDynamicConstants(){
     try{
         await ConstantsLoader.LoadModule();
-        await LocalConstLoader.LoadModule();
+        await CreateChessBoardData();
         await LoadChessTextures();
     }catch(error){
         console.log(error);

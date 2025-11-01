@@ -44,11 +44,8 @@ export function CreateGraphicsConstants() {
     WhiteTexture = new Texture(WhiteImage,SizeX,SizeY);
     //Creating BlackSquareTexture
     BlackColor = new RGBA(0,0,0,255);
-    console.log(BlackColor)
     BlackImage = new ColorImage(BlackColor,SizeX,SizeY);
-    console.log(BlackImage)
     BlackTexture = new Texture(BlackImage,SizeX,SizeY);
-    console.log(BlackTexture)
     //Creating RedSquareTexture
     RedColor = new RGBA(255,0,0,255);
     RedImage = new ColorImage(RedColor,SizeX,SizeY);

@@ -10,11 +10,7 @@ export async function Chess(){
     //creating visual
     ResizeCanvasToChessBoard(LOCALCONST.ChessBoardSize,ENGINE.CONST.SizeX,ENGINE.CONST.SizeY);
     //creating chessboard render
-    const ChessBoardRender = new ENGINE.Render(LOCALCONST.BlackWihteTileMap,RenderTileMap,LOCALCONST.BlackWihteTileMap);
+    const ChessBoardRender = new ENGINE.Render(LOCALCONST.TileMap,RenderTileMap,LOCALCONST.TileMap);
     ChessBoardRender.Render();
-
-    //Test
-    let ImageData = LOCALCONST.BlackKingTexture.GetTexture();
-    ENGINE.CONST.MainSceneContext.putImageData(ImageData,0,0);
 }
 Chess();
