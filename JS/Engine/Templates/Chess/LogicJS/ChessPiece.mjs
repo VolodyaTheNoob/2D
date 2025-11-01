@@ -6,6 +6,9 @@ export class ChessPiece extends ENGINE.Sprite{
         super(SpriteTexture,PosX,PosY);
         this.Team = this.Team;
     }
+    Clone(){
+        return new ChessPiece(this.Texture,this.PositionX,this.PositionY,this.Team);
+    }
     GetTexture(){
         return super.GetTexture();
     }

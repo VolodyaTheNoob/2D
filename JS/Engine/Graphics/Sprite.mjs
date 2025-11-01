@@ -11,6 +11,10 @@ export class Sprite{
         this.PositionX = PosX;
         this.PositionY = PosY;
     }
+    //Copy constructor
+    Clone() {
+        return new Sprite(this.Texture,this.PositionX,this.PositionY);
+    }
     //Texture set/get
     set Texture(NewTexture){
         this._Texture = NewTexture;

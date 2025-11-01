@@ -11,6 +11,8 @@ export async function Chess(){
     ResizeCanvasToChessBoard(LOCALCONST.ChessBoardSize,ENGINE.CONST.SizeX,ENGINE.CONST.SizeY);
     //creating chessboard render
     const ChessBoardRender = new ENGINE.Render(LOCALCONST.TileMap,RenderTileMap,LOCALCONST.TileMap);
+    const ChessPiecesRender = new ENGINE.Render(LOCALCONST.GamePiecesTileMap,RenderTileMap,LOCALCONST.GamePiecesTileMap);
     ChessBoardRender.Render();
+    ChessPiecesRender.Render();
 }
 Chess();

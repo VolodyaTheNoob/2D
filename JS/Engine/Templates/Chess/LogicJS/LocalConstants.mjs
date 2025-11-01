@@ -19,6 +19,10 @@ export let SecondTile; //ChessBoardTile - 2
 export const ChessBoardSize = 8; //ChessBoardSize by X and Y - they Equal in this cases
 export let Tiles; //Array of Tiles
 export let TileMap; //TileMap class - contains Tiles
+
+export let GamePieces; //Array of PlayblePeaces
+export let GamePiecesTileMap; //TileMap class - contains GamePieces
+
 //Pieaces textures(images) folder path
 const ChessTexturesFolderPath = "../../../../../Textures/ChessPeaces/"; //cant rename now ChessPeaces->ChessPieces
 //White Pieces
@@ -116,7 +120,7 @@ export async function CreateChessBoardData(){
         [FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile],
         [SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile]
     ];
-    TileMap = new ENGINE.TileMap([CONST.SizeX,CONST.SizeY],[ChessBoardSize,ChessBoardSize],Tiles);
+    TileMap = new ENGINE.TileMap([SizeX,SizeY],[ChessBoardSize,ChessBoardSize],Tiles);
 }
 //Creating/Loading ChessPieces Textures
 export async function LoadChessTextures(){
@@ -140,11 +144,11 @@ export async function LoadChessTextures(){
     //Knight
     await WhiteKnightImage.CreateImage(await ENGINE.LoadImage(WhiteKnightSRC));
     await WhiteKnightTexture.SetTexture(WhiteKnightImage);
-    await WhiteKnight.SetTexture(WhiteKnightImage);
+    await WhiteKnight.SetTexture(WhiteKnightTexture);
     //Pawn
     await WhitePawnImage.CreateImage(await ENGINE.LoadImage(WhitePawnSRC));
     await WhitePawnTexture.SetTexture(WhitePawnImage);
-    await WhitePawn.SetTexture(WhitePawnImage);
+    await WhitePawn.SetTexture(WhitePawnTexture);
     //BlackPeaces
     //King
     await BlackKingImage.CreateImage(await ENGINE.LoadImage(BlackKingSRC));
@@ -173,8 +177,26 @@ export async function LoadChessTextures(){
 }
 
 //Setting up ChessPieces
-export async function CreateChessPiece(){
-    
+export async function CreateChessPieces(){
+    GamePieces = [
+        [BlackRook.Clone(),BlackKnight.Clone(),BlackBishop.Clone(),BlackQueen.Clone(),BlackKing.Clone(),BlackBishop.Clone(),BlackKnight.Clone(),BlackRook.Clone()],
+            [BlackPawn.Clone(),BlackPawn.Clone(),BlackPawn.Clone(),BlackPawn.Clone(),BlackPawn.Clone(),BlackPawn.Clone(),BlackPawn.Clone(),BlackPawn.Clone()],
+            [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
+            [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
+            [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
+            [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
+            [WhitePawn.Clone(),WhitePawn.Clone(),WhitePawn.Clone(),WhitePawn.Clone(),WhitePawn.Clone(),WhitePawn.Clone(),WhitePawn.Clone(),WhitePawn.Clone()],
+        [WhiteRook.Clone(),WhiteKnight.Clone(),WhiteBishop.Clone(),WhiteQueen.Clone(),WhiteKing.Clone(),WhiteBishop.Clone(),WhiteKnight.Clone(),WhiteRook.Clone()],
+    ]
+    //SettingPositions
+    for(let y = 0; y < ChessBoardSize;y++){
+        for(let x = 0; x < ChessBoardSize;x++){
+            if(GamePieces[y][x] !== undefined){
+                GamePieces[y][x].SetPosition(x,y);
+            }
+        }
+    }
+    GamePiecesTileMap = new ENGINE.TileMap([SizeX,SizeY],[ChessBoardSize,ChessBoardSize],GamePieces);
 }
 
 export const ConstantsModulePromise = ConstantsLoader.LoadModule;
@@ -185,6 +207,7 @@ export async function LoadAllDynamicConstants(){
         await ConstantsLoader.LoadModule();
         await CreateChessBoardData();
         await LoadChessTextures();
+        await CreateChessPieces();
     }catch(error){
         console.log(error);
     }

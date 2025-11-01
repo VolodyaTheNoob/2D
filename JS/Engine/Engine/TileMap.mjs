@@ -16,7 +16,7 @@ export class TileMap{
     SetTileMap(NewTileMap){
         this.Tiles = NewTileMap;
     }
-    SetNetTileByIndex(X,Y,NewTile){
+    SetTileByIndex(X,Y,NewTile){
         this.Tiles[Y][X] = NewTile;
     }
 }
