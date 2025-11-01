@@ -14,73 +14,87 @@ const SecondColor = new ENGINE.RGBA(200,200,200,255);
 export let SecondColorImage;
 export let SecondColorTexture;
 
-export let FirstTile;
-export let SecondTile;
-export const ChessBoardSize = 8;
-export let Tiles;
-export let TileMap;
-//White Peaces
+export let FirstTile; //ChessBoardTile - 1
+export let SecondTile; //ChessBoardTile - 2
+export const ChessBoardSize = 8; //ChessBoardSize by X and Y - they Equal in this cases
+export let Tiles; //Array of Tiles
+export let TileMap; //TileMap class - contains Tiles
+//Pieaces textures(images) folder path
+const ChessTexturesFolderPath = "../../../../../Textures/ChessPeaces/"; //cant rename now ChessPeaces->ChessPieces
+//White Pieces
 //White King
-const WhiteKingSRC = "../../../../../Textures/ChessPieces/w-king.png";
-export const WhiteKingImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY);
-export const WhiteKingTexture = new ENGINE.Texture(undefined,SizeX,SizeY);
-export const WhiteKing = new ChessPiece(undefined,0,0,0);
+const WhiteKingFileName = "w-king.png";
+const WhiteKingSRC = ChessTexturesFolderPath + WhiteKingFileName; //SRC 
+export const WhiteKingImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY); //Image class
+export const WhiteKingTexture = new ENGINE.Texture(undefined,SizeX,SizeY); //Texture class
+export const WhiteKing = new ChessPiece(undefined,0,0,0); //ChessPiece class
 //White Queen
-const WhiteQueenSRC = "../../../../../Textures/ChessPieces/w-queen.png";
-export const WhiteQueenImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY);
-export const WhiteQueenTexture = new ENGINE.Texture(undefined,SizeX,SizeY);
-export const WhiteQueen = new ChessPiece(undefined,0,0,0);
+const WhiteQueenFileName = "w-queen.png";
+const WhiteQueenSRC = ChessTexturesFolderPath + WhiteQueenFileName; //SRC
+export const WhiteQueenImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY); //Image
+export const WhiteQueenTexture = new ENGINE.Texture(undefined,SizeX,SizeY); //Texture class
+export const WhiteQueen = new ChessPiece(undefined,0,0,0); //ChessPiece class
 //White Rook
-const WhiteRookSRC = "../../../../../Textures/ChessPieces/w-rook.png";
-export const WhiteRookImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY);
-export const WhiteRookTexture = new ENGINE.Texture(undefined,SizeX,SizeY);
-export const WhiteRook = new ChessPiece(undefined,0,0,0);
+const WhiteRookFileName = "w-rook.png";
+const WhiteRookSRC = ChessTexturesFolderPath + WhiteRookFileName; //SRC
+export const WhiteRookImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY); //Image
+export const WhiteRookTexture = new ENGINE.Texture(undefined,SizeX,SizeY); //Texture class
+export const WhiteRook = new ChessPiece(undefined,0,0,0); //ChessPiece class
 //White Bishop
-const WhiteBishopSRC = "../../../../../Textures/ChessPieces/w-bishop.png" ;
-export const WhiteBishopImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY);
-export const WhiteBishopTexture = new ENGINE.Texture(undefined,SizeX,SizeY);
-export const WhiteBishop = new ChessPiece(undefined,0,0,0);
+const WhiteBishopFileName = "w-bishop.png"
+const WhiteBishopSRC = ChessTexturesFolderPath + WhiteBishopFileName; //SRC
+export const WhiteBishopImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY); //Image
+export const WhiteBishopTexture = new ENGINE.Texture(undefined,SizeX,SizeY); //Texture class
+export const WhiteBishop = new ChessPiece(undefined,0,0,0); //ChessPiece class
 //White Knight
-const WhiteKnightSRC = "../../../../../Textures/ChessPieces/w-knight.png";
-export const WhiteKnightImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY);
-export const WhiteKnightTexture = new ENGINE.Texture(undefined,SizeX,SizeY);
-export const WhiteKnight = new ChessPiece(undefined,0,0,0);
+const WhiteKnightFileName = "w-knight.png"
+const WhiteKnightSRC = ChessTexturesFolderPath + WhiteKnightFileName; //SRC
+export const WhiteKnightImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY); //Image
+export const WhiteKnightTexture = new ENGINE.Texture(undefined,SizeX,SizeY); //Texture class
+export const WhiteKnight = new ChessPiece(undefined,0,0,0); //ChessPiece class
 //White Pawn
-const WhitePawnSRC = "../../../../../Textures/ChessPieces/w-pawn.png";
-export const WhitePawnImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY);
-export const WhitePawnTexture = new ENGINE.Texture(undefined,SizeX,SizeY);
-export const WhitePawn = new ChessPiece(undefined,0,0,0);
-//Black Peaces
+const WhitePawnFileName = "w-pawn.png"
+const WhitePawnSRC = ChessTexturesFolderPath + WhitePawnFileName; //SRC
+export const WhitePawnImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY); //Image
+export const WhitePawnTexture = new ENGINE.Texture(undefined,SizeX,SizeY); //Texture class
+export const WhitePawn = new ChessPiece(undefined,0,0,0); //ChessPiece class
+//Black Pieces
 //Black King
-const BlackKingSRC = "../../../../../Textures/ChessPieces/b-king.png";
-export const BlackKingImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY);
-export const BlackKingTexture = new ENGINE.Texture(undefined,SizeX,SizeY);
-export const BlackKing = new ChessPiece(undefined,0,0,0);
+const BlackKingFileName = "b-king.png"
+const BlackKingSRC = ChessTexturesFolderPath + BlackKingFileName; //SRC
+export const BlackKingImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY); //Image
+export const BlackKingTexture = new ENGINE.Texture(undefined,SizeX,SizeY); //Texture class
+export const BlackKing = new ChessPiece(undefined,0,0,0); //ChessPiece class
 //Black Queen
-const BlackQueenSRC = "../../../../../Textures/ChessPieces/b-queen.png";
-export const BlackQueenImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY);
-export const BlackQueenTexture = new ENGINE.Texture(undefined,SizeX,SizeY);
-export const BlackQueen = new ChessPiece(undefined,0,0,0);
+const BlackQueenFileName = "b-queen.png";
+const BlackQueenSRC = ChessTexturesFolderPath + BlackQueenFileName; //SRC
+export const BlackQueenImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY); //Image
+export const BlackQueenTexture = new ENGINE.Texture(undefined,SizeX,SizeY); //Texture class
+export const BlackQueen = new ChessPiece(undefined,0,0,0); //ChessPiece class
 //Black Rook
-const BlackRookSRC = "../../../../../Textures/ChessPChessPieceseaces/b-rook.png";
-export const BlackRookImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY);
-export const BlackRookTexture = new ENGINE.Texture(undefined,SizeX,SizeY);
-export const BlackRook = new ChessPiece(undefined,0,0,0);
+const BlackRookFileName = "b-rook.png";
+const BlackRookSRC = ChessTexturesFolderPath + BlackRookFileName; //SRC
+export const BlackRookImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY); //Image
+export const BlackRookTexture = new ENGINE.Texture(undefined,SizeX,SizeY); //Texture class
+export const BlackRook = new ChessPiece(undefined,0,0,0); //ChessPiece class
 //Black Bishop
-const BlackBishopSRC = "../../../../../Textures/ChessPieces/b-bishop.png";
-export const BlackBishopImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY);
-export const BlackBishopTexture = new ENGINE.Texture(undefined,SizeX,SizeY);
-export const BlackBishop = new ChessPiece(undefined,0,0,0);
+const BlackBishopFileName = "b-bishop.png";
+const BlackBishopSRC = ChessTexturesFolderPath + BlackBishopFileName; //SRC
+export const BlackBishopImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY); //Image
+export const BlackBishopTexture = new ENGINE.Texture(undefined,SizeX,SizeY); //Texture class
+export const BlackBishop = new ChessPiece(undefined,0,0,0); //ChessPiece class
 //Black Knight
-const BlackKnightSRC = "../../../../../Textures/ChessPieces/b-knight.png"
-export const BlackKnightImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY);
-export const BlackKnightTexture = new ENGINE.Texture(undefined,SizeX,SizeY);
-export const BlackKnight = new ChessPiece(undefined,0,0,0);
+const BlackKnightFileName = "b-knight.png"
+const BlackKnightSRC = ChessTexturesFolderPath + BlackKnightFileName; //SRC
+export const BlackKnightImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY); //Image
+export const BlackKnightTexture = new ENGINE.Texture(undefined,SizeX,SizeY); //Texture class
+export const BlackKnight = new ChessPiece(undefined,0,0,0); //ChessPiece class
 //Black Pawn
-const BlackPawnSRC = "../../../../../Textures/ChessPieces/b-pawn.png"
-export const BlackPawnImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY);
-export const BlackPawnTexture = new ENGINE.Texture(undefined,SizeX,SizeY);
-export const BlackPawn = new ChessPiece(undefined,0,0,0);
+const BlackPawnFileName = "b-pawn.png"
+const BlackPawnSRC = ChessTexturesFolderPath + BlackPawnFileName; //SRC
+export const BlackPawnImage = new ENGINE.DeffaultImage(undefined,SizeX,SizeY); //Image
+export const BlackPawnTexture = new ENGINE.Texture(undefined,SizeX,SizeY); //Texture class
+export const BlackPawn = new ChessPiece(undefined,0,0,0); //ChessPiece class
 //Loaders
 export const ConstantsLoader = new ModuleLoader("./Graphics/Graphics.mjs",CONST.CreateGraphicsConstants);
 //Dynamic constants
@@ -104,7 +118,7 @@ export async function CreateChessBoardData(){
     ];
     TileMap = new ENGINE.TileMap([CONST.SizeX,CONST.SizeY],[ChessBoardSize,ChessBoardSize],Tiles);
 }
-
+//Creating/Loading ChessPieces Textures
 export async function LoadChessTextures(){
     //WhitePeaces
     //King
@@ -158,6 +172,7 @@ export async function LoadChessTextures(){
     await BlackPawn.SetTexture(BlackPawnTexture);
 }
 
+//Setting up ChessPieces
 export async function CreateChessPiece(){
     
 }
