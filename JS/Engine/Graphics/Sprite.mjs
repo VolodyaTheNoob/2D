@@ -4,10 +4,46 @@ export class Sprite{
         if(SpriteTexture !== undefined){
             this.SizeX = SpriteTexture.SizeX;
             this.SizeY = SpriteTexture.SizeY;
+        }else{
+            this.SizeX = undefined;
+            this.SizeY = undefined;
         }
         this.PositionX = PosX;
         this.PositionY = PosY;
     }
+    //Texture set/get
+    set Texture(NewTexture){
+        this._Texture = NewTexture;
+    }
+    get Texture(){
+        return this._Texture;
+    }
+    //SizeX set/get
+    set SizeX(NewSizeX){
+        this._SizeX = NewSizeX;
+    }
+    get SizeX(){
+        return this._SizeX;
+    }
+    //SizeY set/get
+    set SizeY(NewSizeY){
+        this._SizeY = NewSizeY;
+    }
+    get SizeY(){
+        return this._SizeY;
+    }
+    //PositionX set/get
+    set PositionX(NewPositionX){
+        this._PositionX = NewPositionX;
+    }
+    get PositionX(){
+        return this._PositionX;
+    }
+    //PositionY set/get
+    set PositionY(NewPositionY){
+        this._PositionY = NewPositionY;
+    }
+    //Functions
     GetTexture(){
         if(this.Texture !== undefined){
             return this.Texture.GetTexture();

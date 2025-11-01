@@ -14,6 +14,7 @@ export async function Chess(){
     ChessBoardRender.Render();
 
     //Test
-    ENGINE.CONST.MainSceneContext.putImageData(LOCALCONST.WhiteKing.GetTexture(),0,0);
+    let ImageData = LOCALCONST.BlackKingTexture.GetTexture();
+    ENGINE.CONST.MainSceneContext.putImageData(ImageData,0,0);
 }
 Chess();
