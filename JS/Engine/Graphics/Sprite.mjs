@@ -1,5 +1,5 @@
 export class Sprite{
-    constructor(SpriteTexture = undefined, PosX = undefined,PosY = undefined){
+    constructor(SpriteTexture = undefined, PosY = undefined,PosX = undefined){
         this.Texture = SpriteTexture;
         if(SpriteTexture !== undefined){
             this.SizeX = SpriteTexture.SizeX;
@@ -13,7 +13,7 @@ export class Sprite{
     }
     //Copy constructor
     Clone() {
-        return new Sprite(this.Texture,this.PositionX,this.PositionY);
+        return new Sprite(this.Texture,this.PositionY,this.PositionX);
     }
     //Texture set/get
     set Texture(NewTexture){

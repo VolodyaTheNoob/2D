@@ -2,8 +2,8 @@ import * as ENGINE from "../EngineImports.mjs";
 import * as LOCALCONST from "./LocalConstants.mjs";
 
 export class ChessPiece extends ENGINE.Sprite{
-    constructor(SpriteTexture = undefined,PosX = undefined,PosY = undefined,Team = undefined){
-        super(SpriteTexture,PosX,PosY);
+    constructor(SpriteTexture = undefined,PosY = undefined,PosX = undefined,Team = undefined){
+        super(SpriteTexture,PosY,PosX);
         this.Team = this.Team;
     }
         //Texture set/get

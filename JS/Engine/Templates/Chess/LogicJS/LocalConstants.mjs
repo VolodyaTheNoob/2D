@@ -111,10 +111,10 @@ export async function CreateChessBoardData(){
     //CreatingChessBoard
     FirstColorImage = new ENGINE.ColorImage(FirstColor,SizeY,SizeX)
     FirstColorTexture = new ENGINE.Texture(FirstColorImage,SizeY,SizeX);
-    FirstTile = new ENGINE.Tile(FirstColorTexture,SizeY,SizeX);
+    FirstTile = new ENGINE.Tile(FirstColorTexture,0,0);
     SecondColorImage = new ENGINE.ColorImage(SecondColor,SizeY,SizeX)
     SecondColorTexture = new ENGINE.Texture(SecondColorImage,SizeY,SizeX);
-    SecondTile = new ENGINE.Tile(SecondColorTexture,SizeY,SizeX);
+    SecondTile = new ENGINE.Tile(SecondColorTexture,1,0);
     Tiles = [
         [FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile],
         [SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile],
@@ -125,6 +125,27 @@ export async function CreateChessBoardData(){
         [FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile],
         [SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile,SecondTile,FirstTile]
     ];
+    
+    for(let y = 0; y < ChessBoardSize;y++){
+        if(y % 2 == 0){
+            for(let x = 0; x < ChessBoardSize; x++){
+                if(x % 2 == 0){
+                    Tiles[y][x] = FirstTile.Clone(y,x)
+                }else{
+                    Tiles[y][x] = SecondTile.Clone(y,x)
+                }
+            }
+        }else{
+            for(let x = 0; x < ChessBoardSize; x++){
+                if(x % 2 == 0){
+                    Tiles[y][x] = SecondTile.Clone(y,x)
+                }else{
+                    Tiles[y][x] = FirstTile.Clone(y,x)
+                }
+            }
+        }
+    }
+        
     TileMap = new ENGINE.TileMap([SizeY,SizeX],[ChessBoardSize,ChessBoardSize],Tiles);
 }
 //Creating/Loading ChessPieces Textures

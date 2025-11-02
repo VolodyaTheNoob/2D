@@ -30,13 +30,12 @@ export async function Chess(){
         //
         ENGINE.CONST.MainSceneContext.clearRect(0, 0, ENGINE.CONST.MainSceneContext.width, ENGINE.CONST.MainSceneContext.height);
 
-        LOCALCONST.ChessBoardRender.Render();
-        LOCALCONST.ChessPiecesRender.Render();
         setTimeout(()=>{requestAnimationFrame(gameLoop)},100);
         
     }
-
-    requestAnimationFrame(gameLoop);
+    LOCALCONST.ChessBoardRender.Render();
+    LOCALCONST.ChessPiecesRender.Render();
+   // requestAnimationFrame(gameLoop);
 }
 Chess();
 
@@ -57,16 +56,27 @@ async function MovePieceWithFocus(FocusedPiece){
     let NewPosX;
     let NewPosY;
     LOCALCONST.GamePiecesTileMap.SetTileByIndex(PrevPosY,PrevPosX,undefined);
+    let PrevAnimCoordX;
+    let PrevAnimCoordY;
+    let AnimationPieceCoordinatesX
+    let AnimationPieceCoordinatesY  
     async function RenderMoveAnimation(FocusedPiece){
+        PrevAnimCoordX = PlayerInput.ClickedBoardCalculatedCoordinates["X"];
+        PrevAnimCoordY = PlayerInput.ClickedBoardCalculatedCoordinates["Y"];  
        await AnimateChessPieceMove(FocusedPiece);
     }
+
     async function AnimateChessPieceMove(FocusedPiece){
-        await ENGINE.CONST.MainSceneContext.clearRect(0, 0, ENGINE.CONST.MainSceneContext.width, ENGINE.CONST.MainSceneContext.height);
-        await LOCALCONST.ChessBoardRender.Render();
-        await LOCALCONST.ChessPiecesRender.Render();
         let AnimationPieceCoordinatesX = PlayerInput.ClickedBoardCalculatedCoordinates["X"];
-        let AnimationPieceCoordinatesY = PlayerInput.ClickedBoardCalculatedCoordinates["Y"];   
+        let AnimationPieceCoordinatesY = PlayerInput.ClickedBoardCalculatedCoordinates["Y"]; 
+        if(AnimationPieceCoordinatesX != PrevAnimCoordX && AnimationPieceCoordinatesY != PrevAnimCoordY){
+            await ENGINE.CONST.MainSceneContext.clearRect(0, 0, ENGINE.CONST.MainSceneContext.width, ENGINE.CONST.MainSceneContext.height);
+            await LOCALCONST.ChessBoardRender.Render();
+            await LOCALCONST.ChessPiecesRender.Render(); 
+        }
         await ENGINE.CONST.MainSceneContext.putImageData(FocusedPiece.GetTexture(),AnimationPieceCoordinatesX,AnimationPieceCoordinatesY);
+        PrevAnimCoordY = AnimationPieceCoordinatesY;
+        PrevAnimCoordX = AnimationPieceCoordinatesX;
         setTimeout(()=>{AnimateChessPieceMove(FocusedPiece)},100);
         
 
