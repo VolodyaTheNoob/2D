@@ -27,8 +27,8 @@ export function SmartRender(ChessPieces,TileMap){
 }
 
 function BackgroundChanger(CurrentTileColor,PieceImageData,[SizeX,SizeY]){
-    const PieceColor1= [0,0,0,255];
-    const PieceColor2 = [244,244,244,255];
+    const PieceColor1= [0,0,0,255]; //for now like constants
+    const PieceColor2 = [244,244,244,255]; //for now like constants
     for(let y = 0; y < SizeY;y+=1){
         for(let x = y * SizeX * 4;x < y * SizeX * 4 + SizeX * 4;x+=4){
            if((PieceImageData.data[x] != PieceColor1[0] &&
@@ -47,4 +47,54 @@ function BackgroundChanger(CurrentTileColor,PieceImageData,[SizeX,SizeY]){
         }
     }
     return PieceImageData;
+}
+//For now will be used by default
+export async function MovePieceWithClick(FocusedPiece,ClickedTile){
+    let PrevPosX = FocusedPiece.GetX();
+    let PrevPosY = FocusedPiece.GetY();
+    if(FocusedPiece.Move(ClickedTile["Y"],ClickedTile["X"])){
+        LOCALCONST.GamePiecesTileMap.SetTileByIndex(PrevPosY,PrevPosX,undefined);
+        LOCALCONST.GamePiecesTileMap.SetTileByIndex(ClickedTile["Y"],ClickedTile["X"],FocusedPiece);
+    }
+}
+//I just will put it in back burner and not use for now - becouse I need more expirience and want to make MVP of this Chess app
+//MVP - I mean minimum valiable product, I do it for me just call it like this
+export async function MovePieceWithFocus(FocusedPiece){
+    let PrevPosX = FocusedPiece.GetX();
+    let PrevPosY = FocusedPiece.GetY();
+    let NewPosX;
+    let NewPosY;
+    //LOCALCONST.GamePiecesTileMap.SetTileByIndex(PrevPosY,PrevPosX,undefined);
+    let PrevAnimCoordX;
+    let PrevAnimCoordY;
+    let AnimationPieceCoordinatesX
+    let AnimationPieceCoordinatesY  
+    async function RenderMoveAnimation(FocusedPiece){
+        PrevAnimCoordX = Math.round(PlayerInput.ClickedBoardCalculatedCoordinates["X"]);
+        PrevAnimCoordY = Math.round(PlayerInput.ClickedBoardCalculatedCoordinates["Y"]);  
+        await AnimateChessPieceMove(FocusedPiece);
+        
+    }
+
+    async function AnimateChessPieceMove(FocusedPiece){
+        AnimationPieceCoordinatesX = Math.round(PlayerInput.ClickedBoardCalculatedCoordinates["X"]);
+        AnimationPieceCoordinatesY = Math.round(PlayerInput.ClickedBoardCalculatedCoordinates["Y"]); 
+        if(AnimationPieceCoordinatesX != PrevAnimCoordX && AnimationPieceCoordinatesY != PrevAnimCoordY){
+            FocusedPiece.SetCoordinates(AnimationPieceCoordinatesY,AnimationPieceCoordinatesX);
+        }
+        PrevAnimCoordY = AnimationPieceCoordinatesY;
+        PrevAnimCoordX = AnimationPieceCoordinatesX;
+        if(PlayerInput.IsMouseDown){
+            setTimeout(()=>{AnimateChessPieceMove(FocusedPiece)},100);
+        }else{
+            if(FocusedPiece.Move(NewPosX,NewPosY)){  
+                LOCALCONST.GamePiecesTileMap.SetTileByIndex(PlayerInput.CurrentBoardTile["Y"],PlayerInput.CurrentBoardTile["X"],FocusedPiece);
+            }else{
+                LOCALCONST.GamePiecesTileMap.SetTileByIndex(PrevPosY,PrevPosX,FocusedPiece);
+            }
+        }
+        
+
+    }
+    await RenderMoveAnimation(FocusedPiece);
 }

@@ -115,6 +115,8 @@ export class ChessPiece extends ENGINE.Sprite{
         if(this.IsCanMove()){
             this.PositionX = NewPosX;
             this.PositionY = NewPosY;
+            this.CoordinatesX = this.GetSizeX() * NewPosX;
+            this.CoordinatesY = this.GetSizeY() * NewPosY;
             return true;
         }   
         return false;
