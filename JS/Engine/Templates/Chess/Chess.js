@@ -4,6 +4,7 @@ import { ResizeCanvasToChessBoard } from "./LogicJS/Visual.mjs";
 import {PlayerInput, UserInput} from "./LogicJS/UserInput.mjs"
 import { RenderTileMap, SmartRender, MovePieceWithClick} from "./LogicJS/GameRender.mjs";
 import { GetClickedCheesPiece } from "./LogicJS/GameLogic.mjs";
+import { Pawn } from "./LogicJS/ChessPieces/Pawn.mjs";
 
 let lastTimestamp = 0;
 
@@ -19,7 +20,6 @@ export async function Chess(){
         lastTimestamp = timestamp;
         //GameLogic
         if(PlayerInput.IsMouseDown === true){
-            console.log(1);
             let ClickedTile = PlayerInput.ClickedBoardTile;
             if(FocusedPiece === undefined){
                 FocusedPiece = await GetClickedCheesPiece(ClickedTile);   

@@ -2,9 +2,10 @@ import * as ENGINE from "../EngineImports.mjs";
 import * as LOCALCONST from "./LocalConstants.mjs";
 
 export class ChessPiece extends ENGINE.Sprite{
-    constructor(SpriteTexture = undefined,PosY = undefined,PosX = undefined,CoordY = undefined,CoordX = undefined,Team = undefined){
+    constructor(SpriteTexture = undefined,PosY = undefined,PosX = undefined,CoordY = undefined,CoordX = undefined,_Team = undefined,_Type = undefined){
         super(SpriteTexture,PosY,PosX,CoordY,CoordX);
-        this.Team = this.Team;
+        this.Team = _Team;
+        this.Type = _Type;
     }
         //Texture set/get
     set Texture(NewTexture){
@@ -62,9 +63,16 @@ export class ChessPiece extends ENGINE.Sprite{
     get Team(){
         return this._Team;
     }
+    //Type set/get
+    set Type(NewType){
+        this._Type = NewType;
+    }
+    get Type(){
+        return this._Type;
+    }
     //Functions
     Clone(NewPosY = this.PositionY,NewPosX = this.PositionX,NewCoordY = this.CoordinatesY,NewCoordX = this.CoordinatesX){
-        return new ChessPiece(this.Texture,NewPosY,NewPosX,NewCoordY,NewCoordX,this.Team);
+        return new ChessPiece(this.Texture,NewPosY,NewPosX,NewCoordY,NewCoordX,this.Team,this.Type);
     }
     GetTexture(){
         return super.GetTexture();
@@ -110,6 +118,12 @@ export class ChessPiece extends ENGINE.Sprite{
     }
     GetSizeY(){
         return super.GetSizeY();
+    }
+    GetType(){
+        return this.Type;
+    }
+    SetType(NewType){
+        this.Type = NewType;
     }
     Move(NewPosY,NewPosX){
         if(this.IsCanMove()){
