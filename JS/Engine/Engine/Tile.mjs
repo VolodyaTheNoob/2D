@@ -3,8 +3,8 @@ import { Sprite } from "../Graphics/Graphics.mjs";
 //Just base class for Tiles
 
 export class Tile extends Sprite{
-    constructor(TileTexture,PosY = undefined,PosX = undefined) {
-        super(TileTexture,PosY,PosX);
+    constructor(TileTexture,PosY = undefined,PosX = undefined,CoordY = undefined,CoordX = undefined) {
+        super(TileTexture,PosY,PosX,CoordY,CoordX);
     }
     set Texture(NewTexture){
         super.Texture = NewTexture;
@@ -40,8 +40,21 @@ export class Tile extends Sprite{
     get PositionY(){
         return super.PositionY;
     }
-    Clone(NewPosY = this.PositionX,NewPosX = this.PositionY){
-        return new Tile(this.Texture,NewPosY,NewPosX);
+        set CoordinatesX(NewCoordinatesX){
+        super.CoordinatesX = NewCoordinatesX;
+    }
+    get CoordinatesX(){
+        return super.CoordinatesX;
+    }
+    //CoorinatesY set/get
+    set CoorinatesY(NewCoordinatesY){
+        super.CoordinatesY = NewCoordinatesY;
+    }
+    get CoorinatesY(){
+        return super.CoordinatesY;
+    }
+    Clone(NewPosY = this.PositionY,NewPosX = this.PositionX,NewCoordY = this.CoordinatesY,NewCoordX = this.CoordinatesX){
+        return new Tile(this.Texture,NewPosY,NewPosX,NewCoordY,NewCoordX);
     }
     GetTexture(){
         return super.GetTexture();
@@ -54,6 +67,18 @@ export class Tile extends Sprite{
     }
     SetPosition(Y,X){
         super.SetPosition(Y,X);
+    }
+        GetCoordinatesX(){
+        return super.GetCoordinatesX();
+    }
+    GetCoordinatesY(){
+        return super.GetCoordinatesY();
+    }
+    SetCoordinatesX(X){
+        super.SetCoordinatesX(X);
+    }
+    SetCoordinatesY(Y){
+        super.SetCoordinatesY(Y);
     }
     GetX(){
        return super.GetX();

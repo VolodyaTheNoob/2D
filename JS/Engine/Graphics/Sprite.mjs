@@ -1,5 +1,5 @@
 export class Sprite{
-    constructor(SpriteTexture = undefined, PosY = undefined,PosX = undefined){
+    constructor(SpriteTexture = undefined, PosY = undefined,PosX = undefined,CoordY = undefined,CoordX = undefined){
         this.Texture = SpriteTexture;
         if(SpriteTexture !== undefined){
             this.SizeX = SpriteTexture.SizeX;
@@ -8,12 +8,14 @@ export class Sprite{
             this.SizeX = undefined;
             this.SizeY = undefined;
         }
+        this.CoordinatesX = CoordX;
+        this.CoordinatesY = CoordY;
         this.PositionX = PosX;
         this.PositionY = PosY;
     }
     //Copy constructor
-    Clone() {
-        return new Sprite(this.Texture,this.PositionY,this.PositionX);
+    Clone(NewPosY = this.PositionY,NewPosX = this.PositionX,NewCoordY = this.CoordinatesY,NewCoordX = this.CoordinatesX) {
+        return new Sprite(this.Texture,NewPosY,NewPosX,NewCoordY,NewCoordX);
     }
     //Texture set/get
     set Texture(NewTexture){
@@ -50,6 +52,20 @@ export class Sprite{
     get PositionY(){
         return this._PositionY;
     }
+    //CoorinatesX set/get
+    set CoordinatesX(NewCoordinatesX){
+        this._CoordinatesX = NewCoordinatesX;
+    }
+    get CoordinatesX(){
+        return this._CoordinatesX;
+    }
+    //CoorinatesY set/get
+    set CoorinatesY(NewCoordinatesY){
+        this._CoordinatesY = NewCoordinatesY;
+    }
+    get CoorinatesY(){
+        return this._CoordinatesY;
+    }
     //Functions
     GetTexture(){
         if(this.Texture !== undefined){
@@ -77,6 +93,25 @@ export class Sprite{
     }
     SetY(Y){
         this.PositionY = Y;
+    }
+    GetCoordinates(){
+        return [this.CoordinatesY,this.CoordinatesX];
+    }
+    SetCoordinates(Y,X){
+        this.CoordinatesY = Y;
+        this.CoordinatesX = X;
+    }
+    GetCoordinatesX(){
+        return this.CoordinatesX;
+    }
+    GetCoordinatesY(){
+        return this.CoordinatesY;
+    }
+    SetCoordinatesX(X){
+        this.CoordinatesX = X;
+    }
+    SetCoordinatesY(Y){
+        this.CoordinatesY = Y;
     }
     GetSize(){
         return this.Texture.GetSize();

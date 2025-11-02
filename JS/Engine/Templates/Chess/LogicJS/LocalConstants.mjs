@@ -130,17 +130,17 @@ export async function CreateChessBoardData(){
         if(y % 2 == 0){
             for(let x = 0; x < ChessBoardSize; x++){
                 if(x % 2 == 0){
-                    Tiles[y][x] = FirstTile.Clone(y,x)
+                    Tiles[y][x] = FirstTile.Clone(y,x,y * SizeY,x * SizeX);
                 }else{
-                    Tiles[y][x] = SecondTile.Clone(y,x)
+                    Tiles[y][x] = SecondTile.Clone(y,x,y * SizeY,x * SizeX);
                 }
             }
         }else{
             for(let x = 0; x < ChessBoardSize; x++){
                 if(x % 2 == 0){
-                    Tiles[y][x] = SecondTile.Clone(y,x)
+                    Tiles[y][x] = SecondTile.Clone(y,x,y * SizeY,x * SizeX);
                 }else{
-                    Tiles[y][x] = FirstTile.Clone(y,x)
+                    Tiles[y][x] = FirstTile.Clone(y,x,y * SizeY,x * SizeX);
                 }
             }
         }
@@ -205,20 +205,21 @@ export async function LoadChessTextures(){
 //Setting up ChessPieces
 export async function CreateChessPieces(){
     GamePieces = [
-        [BlackRook.Clone(),BlackKnight.Clone(),BlackBishop.Clone(),BlackQueen.Clone(),BlackKing.Clone(),BlackBishop.Clone(),BlackKnight.Clone(),BlackRook.Clone()],
-            [BlackPawn.Clone(),BlackPawn.Clone(),BlackPawn.Clone(),BlackPawn.Clone(),BlackPawn.Clone(),BlackPawn.Clone(),BlackPawn.Clone(),BlackPawn.Clone()],
+        [BlackRook.Clone(0,0),BlackKnight.Clone(0,1),BlackBishop.Clone(0,2),BlackQueen.Clone(0,3),BlackKing.Clone(0,4),BlackBishop.Clone(0,5),BlackKnight.Clone(0,6),BlackRook.Clone(0,7)],
+            [BlackPawn.Clone(1,0),BlackPawn.Clone(1,1),BlackPawn.Clone(1,2),BlackPawn.Clone(1,3),BlackPawn.Clone(1,4),BlackPawn.Clone(1,5),BlackPawn.Clone(1,6),BlackPawn.Clone(1,7)],
             [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
             [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
             [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
             [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
-            [WhitePawn.Clone(),WhitePawn.Clone(),WhitePawn.Clone(),WhitePawn.Clone(),WhitePawn.Clone(),WhitePawn.Clone(),WhitePawn.Clone(),WhitePawn.Clone()],
-        [WhiteRook.Clone(),WhiteKnight.Clone(),WhiteBishop.Clone(),WhiteQueen.Clone(),WhiteKing.Clone(),WhiteBishop.Clone(),WhiteKnight.Clone(),WhiteRook.Clone()],
+            [WhitePawn.Clone(6,0),WhitePawn.Clone(6,1),WhitePawn.Clone(6,2),WhitePawn.Clone(6,3),WhitePawn.Clone(6,4),WhitePawn.Clone(6,5),WhitePawn.Clone(6,6),WhitePawn.Clone(6,7)],
+        [WhiteRook.Clone(7,0),WhiteKnight.Clone(7,1),WhiteBishop.Clone(7,2),WhiteQueen.Clone(7,3),WhiteKing.Clone(7,4),WhiteBishop.Clone(7,5),WhiteKnight.Clone(7,6),WhiteRook.Clone(7,7)],
     ]
     //SettingPositions
     for(let y = 0; y < ChessBoardSize;y++){
         for(let x = 0; x < ChessBoardSize;x++){
             if(GamePieces[y][x] !== undefined){
                 GamePieces[y][x].SetPosition(y,x);
+                GamePieces[y][x].SetCoordinates(y * SizeY, x * SizeX);
             }
         }
     }

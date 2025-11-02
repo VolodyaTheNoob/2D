@@ -2,8 +2,8 @@ import * as ENGINE from "../EngineImports.mjs";
 import * as LOCALCONST from "./LocalConstants.mjs";
 
 export class ChessPiece extends ENGINE.Sprite{
-    constructor(SpriteTexture = undefined,PosY = undefined,PosX = undefined,Team = undefined){
-        super(SpriteTexture,PosY,PosX);
+    constructor(SpriteTexture = undefined,PosY = undefined,PosX = undefined,CoordY = undefined,CoordX = undefined,Team = undefined){
+        super(SpriteTexture,PosY,PosX,CoordY,CoordX);
         this.Team = this.Team;
     }
         //Texture set/get
@@ -41,6 +41,20 @@ export class ChessPiece extends ENGINE.Sprite{
     get PositionY(){
         return super.PositionY;
     }
+        //CoorinatesX set/get
+    set CoordinatesX(NewCoordinatesX){
+        super.CoordinatesX = NewCoordinatesX;
+    }
+    get CoordinatesX(){
+        return super.CoordinatesX;
+    }
+    //CoorinatesY set/get
+    set CoorinatesY(NewCoordinatesY){
+        super.CoordinatesY = NewCoordinatesY;
+    }
+    get CoorinatesY(){
+        return super.CoordinatesY;
+    }
     //Team set/get
     set Team(NewTeam){
         this._Team = NewTeam;
@@ -49,8 +63,8 @@ export class ChessPiece extends ENGINE.Sprite{
         return this._Team;
     }
     //Functions
-    Clone(){
-        return new ChessPiece(this.Texture,this.PositionX,this.PositionY,this.Team);
+    Clone(NewPosY = this.PositionY,NewPosX = this.PositionX,NewCoordY = this.CoordinatesY,NewCoordX = this.CoordinatesX){
+        return new ChessPiece(this.Texture,NewPosY,NewPosX,NewCoordY,NewCoordX,this.Team);
     }
     GetTexture(){
         return super.GetTexture();
@@ -63,6 +77,18 @@ export class ChessPiece extends ENGINE.Sprite{
     }
     SetPosition(Y,X){
         super.SetPosition(Y,X);
+    }
+    GetCoordinatesX(){
+        return super.GetCoordinatesX();
+    }
+    GetCoordinatesY(){
+        return super.GetCoordinatesY();
+    }
+    SetCoordinatesX(X){
+        super.SetCoordinatesX(X);
+    }
+    SetCoordinatesY(Y){
+        super.SetCoordinatesY(Y);
     }
     GetX(){
        return super.GetX();
