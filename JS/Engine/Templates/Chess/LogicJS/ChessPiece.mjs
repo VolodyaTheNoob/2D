@@ -89,7 +89,9 @@ export class ChessPiece extends ENGINE.Sprite{
         if(this.IsCanMove()){
             this.PositionX = NewPosX;
             this.PositionY = NewPosY;
+            return true;
         }   
+        return false;
     }
     IsCanMove(){
         return true;

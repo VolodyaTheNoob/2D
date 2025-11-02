@@ -11,9 +11,7 @@ export async function Chess(){
     await LOCALCONST.LoadAllDynamicConstants();
     //creating visual
     ResizeCanvasToChessBoard(LOCALCONST.ChessBoardSize,ENGINE.CONST.SizeX,ENGINE.CONST.SizeY);
-    //creating chessboard render
-    const ChessBoardRender = new ENGINE.Render(LOCALCONST.TileMap,RenderTileMap);
-    const ChessPiecesRender = new ENGINE.Render(LOCALCONST.GamePiecesTileMap,SmartRender,LOCALCONST.TileMap);
+
     let FocusedPiece
     async function gameLoop(timestamp) {
         const deltaTime = timestamp - lastTimestamp;
@@ -23,19 +21,17 @@ export async function Chess(){
             let ClickedTile = PlayerInput.ClickedBoardTile;
             if(FocusedPiece === undefined){
                 FocusedPiece = await GetClickedCheesPiece(ClickedTile);   
-                console.log(1)
             }else{
-                await MovePieceWithClick(FocusedPiece,ClickedTile);
+                await MovePieceWithFocus(FocusedPiece);
                 FocusedPiece = undefined;
-                console.log(2)
             }
            
         }
         //
         ENGINE.CONST.MainSceneContext.clearRect(0, 0, ENGINE.CONST.MainSceneContext.width, ENGINE.CONST.MainSceneContext.height);
 
-        ChessBoardRender.Render();
-        ChessPiecesRender.Render();
+        LOCALCONST.ChessBoardRender.Render();
+        LOCALCONST.ChessPiecesRender.Render();
         setTimeout(()=>{requestAnimationFrame(gameLoop)},100);
         
     }
@@ -50,15 +46,38 @@ async function GetClickedCheesPiece(ClickedBoardTile){
 async function MovePieceWithClick(FocusedPiece,ClickedTile){
     let PrevPosX = FocusedPiece.GetX();
     let PrevPosY = FocusedPiece.GetY();
-    console.log(PrevPosY,PrevPosX)
-    console.log(FocusedPiece);
-    FocusedPiece.Move(ClickedTile["Y"],ClickedTile["X"]);
-    LOCALCONST.GamePiecesTileMap.SetTileByIndex(PrevPosY,PrevPosX,undefined);
-    LOCALCONST.GamePiecesTileMap.SetTileByIndex(ClickedTile["Y"],ClickedTile["X"],FocusedPiece);
-    console.log(ClickedTile["Y"],ClickedTile["X"]);
-    console.log(FocusedPiece);
+    if(FocusedPiece.Move(ClickedTile["Y"],ClickedTile["X"])){
+        LOCALCONST.GamePiecesTileMap.SetTileByIndex(PrevPosY,PrevPosX,undefined);
+        LOCALCONST.GamePiecesTileMap.SetTileByIndex(ClickedTile["Y"],ClickedTile["X"],FocusedPiece);
+    }
 }
 async function MovePieceWithFocus(FocusedPiece){
-    
+    let PrevPosX = FocusedPiece.GetX();
+    let PrevPosY = FocusedPiece.GetY();
+    let NewPosX;
+    let NewPosY;
+    LOCALCONST.GamePiecesTileMap.SetTileByIndex(PrevPosY,PrevPosX,undefined);
+    async function RenderMoveAnimation(FocusedPiece){
+       await AnimateChessPieceMove(FocusedPiece);
+    }
+    async function AnimateChessPieceMove(FocusedPiece){
+        await ENGINE.CONST.MainSceneContext.clearRect(0, 0, ENGINE.CONST.MainSceneContext.width, ENGINE.CONST.MainSceneContext.height);
+        await LOCALCONST.ChessBoardRender.Render();
+        await LOCALCONST.ChessPiecesRender.Render();
+        let AnimationPieceCoordinatesX = PlayerInput.ClickedBoardCalculatedCoordinates["X"];
+        let AnimationPieceCoordinatesY = PlayerInput.ClickedBoardCalculatedCoordinates["Y"];   
+        await ENGINE.CONST.MainSceneContext.putImageData(FocusedPiece.GetTexture(),AnimationPieceCoordinatesX,AnimationPieceCoordinatesY);
+        setTimeout(()=>{AnimateChessPieceMove(FocusedPiece)},100);
+        
+
+    }
+    await RenderMoveAnimation(FocusedPiece);
+
+    if(FocusedPiece.Move(NewPosX,NewPosY)){  
+        //LOCALCONST.GamePiecesTileMap.SetTileByIndex(PlayerInput.CurrentBoardTile["Y"],PlayerInput.CurrentBoardTile["X"],FocusedPiece);
+    }else{
+       // LOCALCONST.GamePiecesTileMap.SetTileByIndex(PrevPosY,PrevPosX,FocusedPiece);
+    }
 }
+
 

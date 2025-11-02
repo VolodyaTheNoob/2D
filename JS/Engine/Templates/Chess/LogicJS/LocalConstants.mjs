@@ -2,6 +2,7 @@ import { ModuleLoader } from "../../../AsyncModuleLoader.mjs";
 import {CONST} from "../EngineImports.mjs";
 import * as ENGINE from "../EngineImports.mjs";
 import { ChessPiece } from "./ChessPiece.mjs";
+import { RenderTileMap,SmartRender } from "./GameRender.mjs";
 
 //Constants
 //GameDeffaultSizes
@@ -101,6 +102,10 @@ export const BlackPawnTexture = new ENGINE.Texture(undefined,SizeY,SizeX); //Tex
 export const BlackPawn = new ChessPiece(undefined,0,0,1); //ChessPiece class
 //Loaders
 export const ConstantsLoader = new ModuleLoader("./Graphics/Graphics.mjs",CONST.CreateGraphicsConstants);
+
+export let ChessBoardRender;
+export let ChessPiecesRender;
+
 //Dynamic constants
 export async function CreateChessBoardData(){
     //CreatingChessBoard
@@ -198,7 +203,10 @@ export async function CreateChessPieces(){
     }
     GamePiecesTileMap = new ENGINE.TileMap([SizeY,SizeX],[ChessBoardSize,ChessBoardSize],GamePieces);
 }
-
+export async function CreateGameRenders() {
+    ChessBoardRender = new ENGINE.Render(TileMap,RenderTileMap);
+    ChessPiecesRender = new ENGINE.Render(GamePiecesTileMap,SmartRender,TileMap);
+}
 export const ConstantsModulePromise = ConstantsLoader.LoadModule;
 
 //Loaders wrap
@@ -208,6 +216,7 @@ export async function LoadAllDynamicConstants(){
         await CreateChessBoardData();
         await LoadChessTextures();
         await CreateChessPieces();
+        await CreateGameRenders();
     }catch(error){
         console.log(error);
     }
