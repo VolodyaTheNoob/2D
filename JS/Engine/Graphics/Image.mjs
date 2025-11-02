@@ -2,7 +2,7 @@ import { RGBA } from "./RGBA.mjs";
 import { MainSceneBackBufferID,MainSceneBackBufferDOM,MainSceneBackBufferContext} from "../Constants.mjs";
 
 export class ColorImage{
-    constructor(_RGBA = undefined,_SizeX = undefined,_SizeY = undefined){
+    constructor(_RGBA = undefined,_SizeY = undefined,_SizeX = undefined){
         this.RGBA = _RGBA; //RGBA Class
         this.SizeX = _SizeX;
         this.SizeY = _SizeY;

@@ -47,6 +47,9 @@ export class Sprite{
     set PositionY(NewPositionY){
         this._PositionY = NewPositionY;
     }
+    get PositionY(){
+        return this._PositionY;
+    }
     //Functions
     GetTexture(){
         if(this.Texture !== undefined){
@@ -57,9 +60,9 @@ export class Sprite{
         this.Texture = NewTexture;
     }
     GetPosition(){
-        return [this.PositionX,this.PositionY];
+        return [this.PositionY,this.PositionX];
     }
-    SetPosition(X,Y){
+    SetPosition(Y,X){
         this.PositionX = X;
         this.PositionY = Y;
     }

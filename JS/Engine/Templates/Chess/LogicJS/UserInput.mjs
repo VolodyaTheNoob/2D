@@ -46,11 +46,9 @@ PlayerInput.AddEventFunction("mousemove",GetUserMouseCoordinates,PlayerInput);
             InputClass.ClickedBoardRawCoordinates = InputClass.CurrentBoardRawCoordinates
             InputClass.ClickedBoardCalculatedCoordinates = InputClass.CurrentBoardCalculatedCoordinates;
             InputClass.ClickedBoardTile = InputClass.CurrentBoardTile;
-            console.log(InputClass.ClickedBoardTile);
             InputClass.IsMouseDown= true;
         });
         InputClass.DOM.addEventListener(MouseUpEventName,  (e) =>{
-            console.log(InputClass.CurrentBoardTile);
             InputClass.IsMouseDown= false;
         });
     }

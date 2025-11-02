@@ -1,5 +1,5 @@
 export class Texture{
-    constructor(Image = undefined,SizeX = undefined,SizeY = undefined){
+    constructor(Image = undefined,SizeY = undefined,SizeX = undefined){
         this.Image = Image;
         this.SizeX = SizeX;
         this.SizeY = SizeY;

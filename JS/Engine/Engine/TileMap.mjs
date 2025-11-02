@@ -3,20 +3,20 @@
 
 export class TileMap{
     constructor(TileSize,TileMapSize, Tiles){
-        [this.TileSizeX,this.TileSizeY] = TileSize;
-        [this.SizeX,this.SizeY] = TileMapSize;
+        [this.TileSizeY,this.TileSizeX] = TileSize;
+        [this.SizeY,this.SizeX] = TileMapSize;
         this.Tiles = Tiles;
     }
     GetTiles(){
         return this.Tiles;
     }
-    GetTileByIndex(X,Y){
+    GetTileByIndex(Y,X){
         return this.Tiles[Y][X];
     }
     SetTileMap(NewTileMap){
         this.Tiles = NewTileMap;
     }
-    SetTileByIndex(X,Y,NewTile){
+    SetTileByIndex(Y,X,NewTile){
         this.Tiles[Y][X] = NewTile;
     }
 }

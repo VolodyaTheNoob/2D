@@ -29,7 +29,6 @@ export function SmartRender(ChessPieces,TileMap){
 }
 
 function BackgroundChanger(CurrentTileColor,PieceImageData,[SizeX,SizeY]){
-    console.log(PieceImageData.data)
     const PieceColor1= [0,0,0,255];
     const PieceColor2 = [244,244,244,255];
     for(let y = 0; y < SizeY;y+=1){
