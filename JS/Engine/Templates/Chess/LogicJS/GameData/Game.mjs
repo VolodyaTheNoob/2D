@@ -12,6 +12,9 @@ export class Game{
         this.BackgroundRender = new ENGINE.Render(this.BackgroundTileMap,RenderFunctions.RenderTileMap,undefined);
         this.ObjectsRender = new ENGINE.Render(this.AllObjectsTileMap,RenderFunctions.SmartRender,this.BackgroundTileMap);
         this.Teams = [Player1.GameData.Team,Player2.GameData.Team];
+        /*
+            I guess if I will go further - I will add new abstractions here
+        */
         this.CurrentTeamMove = this.Teams[0];//ProcessPlayerMoveData
         this.CurrentPlayerMove = this.Player1;//ProcessPlayerMoveData
         this.CurrentPlayerFocusedPiece = undefined;//ProcessPlayerClickData
@@ -62,7 +65,6 @@ export class Game{
                     }else{
                         console.log(this.CurrentPlayerFocusedPiece);
                         if(await this.CurrentPlayerFocusedPiece.IsCanMove(ClickedTile["Y"],ClickedTile["X"])){
-                            console.log(this.CurrentPlayerFocusedTile);
                             this.CurrentPlayerFocusedTile = ClickedTile;
                         }else{
                             this.CurrentPlayerFocusedTile = undefined;
@@ -76,9 +78,11 @@ export class Game{
     }
     async ProcessPlayerMove(){
         if(this.CurrentPlayerFocusedTile !== undefined){
-            this.CurrentPlayerFocusedPiece.Move(this.CurrentPlayerFocusedTile["Y"],this.CurrentPlayerFocusedTile["X"]);
-            this.AllObjectsTileMap.SetTileByIndex(this.CurrentPlayerFocusedPiece.PositionY,this.CurrentPlayerFocusedPiece.PositionX,undefined);
+            let PrevPosY = this.CurrentPlayerFocusedPiece.PositionY;
+            let PrevPosX = this.CurrentPlayerFocusedPiece.PositionX;
+            await this.CurrentPlayerFocusedPiece.Move(this.CurrentPlayerFocusedTile["Y"],this.CurrentPlayerFocusedTile["X"]);
             this.CurrentPlayerMove.GameData.DestroyedPieces.push(this.AllObjectsTileMap.GetTileByIndex(this.CurrentPlayerFocusedTile["Y"],this.CurrentPlayerFocusedTile["X"]));
+            this.AllObjectsTileMap.SetTileByIndex(PrevPosY,PrevPosX,undefined);
             this.AllObjectsTileMap.SetTileByIndex(this.CurrentPlayerFocusedTile["Y"],this.CurrentPlayerFocusedTile["X"],this.CurrentPlayerFocusedPiece); 
             return true;
         }

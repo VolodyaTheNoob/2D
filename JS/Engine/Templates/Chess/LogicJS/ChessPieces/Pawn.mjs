@@ -23,42 +23,49 @@ export class Pawn extends ChessPiece{
     }
     async IsCanMove(NewPosY,NewPosX){
         let NewTileData = LOCALCONST.GamePiecesTileMap.GetTiles()[NewPosY][NewPosX];
-        let Direction = -1 * this.Team;
-        if((this.PositionY - NewPosY > Direction && this.Team == 0) || (this.PositionY - NewPosY <= Direction && this.Team == 1)){
-            if(Math.abs(this.PositionY - NewPosY) < 3 && Math.abs(this.PositionY - NewPosY) > 0){
-                if((this.PositionY - NewPosY == 2 && this.Team == 0) || (this.PositionY - NewPosY == -2 && this.Team == 1)){
-                //check for first move and if its something betwen current pos and new pos
-                    if(this.PositionX - NewPosX == 0){
-                        if(this.AlreadyMoved == false){
-                            if(Direction == 0){
-                                if(await IsLineEmpty(this.PositionY,this.PositionX,NewPosY,NewPosX,-1,0)){
-                                    return true;
-                                }
-                            }else{;
-                                if(await IsLineEmpty(this.PositionY,this.PositionX,NewPosY,NewPosX,1,0)){
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-            }else{
-                    if(Math.abs(this.PositionX- NewPosX) == 1){
+        let OffsetY = this.PositionY - NewPosY;
+        let OffsetX = this.PositionX - NewPosX;
+        if((Math.abs(OffsetY) == 1 || Math.abs(OffsetY) == 2) && (OffsetX == 0 || Math.abs(OffsetX) == 1)){
+            if(Math.abs(OffsetY) == 2){
+                if(OffsetX == 0){
+                    if(this.AlreadyMoved == false){
                         if(NewTileData !== undefined){
-                            if(NewTileData.Team != this.Team){
-                                if(NewTileData.Type !== "King"){
+                            if(NewTileData.Team !== this.Team){
+                                if(NewTileData.Type != "King"){
                                     return true;
                                 }
                             }
-                        }
-                    }
-                    if(this.PositionX- NewPosX == 0){
-                        if(NewTileData === undefined){
+                        }else{
                             return true;
                         }
-                    }           
+                    }
+                }
+            }else{
+                if(OffsetX == 0){
+                    if(NewTileData === undefined){
+                        return true;
+                    }
+                }else{
+                    if(NewTileData !== undefined){
+                        if(NewTileData.Team !== this.Team){
+                            if(NewTileData.Type != "King"){
+                                return true;
+                            }
+                        }
+                    }
                 }
             }
+        }
+    return false;
+    }
+    async IsAttacking(PosY,PosX){
+        let OffsetY = this.PositionY - PosY;
+        let OffsetX = this.PositionX - PosX;
+        if((Math.abs(OffsetY) == 1) && (Math.abs(OffsetX) == 1)){
+            if(Math.abs(OffsetX) == 1){
+                return true; 
             }
-            return false;
+        }
+    return false;
     }
 }

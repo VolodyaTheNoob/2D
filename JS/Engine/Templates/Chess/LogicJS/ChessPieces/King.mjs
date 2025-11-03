@@ -24,10 +24,10 @@ export class King extends ChessPiece{
         let OffsetX = this.PositionX - NewPosX;
         let OtherTeam = 0;
         if(this.Team == 0){
-                OtherTeam = 1;
-            }else{
-                OtherTeam = 0;
-            }
+            OtherTeam = 1;
+        }else{
+            OtherTeam = 0;
+        }
         if((Math.abs(OffsetY) <= 1) && (Math.abs(OffsetX) <= 1)){
             if(OffsetY != 0 || OffsetX != 0){
                 if(await IsTileAttacked(NewPosY,NewPosX,OtherTeam) == false){
@@ -40,8 +40,15 @@ export class King extends ChessPiece{
                     }
                 }
             }
-        }
-        
+        }  
         return false;
+    }
+    async IsAttacking(){
+        let NewTileData = LOCALCONST.GamePiecesTileMap.GetTiles()[NewPosY][NewPosX];
+        let OffsetY = this.PositionY - NewPosY;
+        let OffsetX = this.PositionX - NewPosX;
+        if(Math.abs(OffsetY) == 1 || Math.abs(OffsetX) == 1){
+            return true;
+        }
     }
 }

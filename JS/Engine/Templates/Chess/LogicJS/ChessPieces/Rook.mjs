@@ -65,8 +65,37 @@ export class Rook extends ChessPiece{
                     }
                 }
             }
+        }    
+        return false;
+    }
+    async IsAttacking(PosY,PosX){
+        let OffsetY = Math.abs(this.PositionY - PosY);
+        let OffsetX = Math.abs(this.PositionX - PosX);
+        if((OffsetX == 0 && OffsetY != 0) || (OffsetX != 0 && OffsetY == 0)){
+            if(OffsetX > 1 || OffsetY > 1){
+                if(this.PositionY - PosY != 0){
+                    if(this.PositionY - PosY > 0){
+                        OffsetY = -1;
+                    }else{
+                        OffsetY = 1
+                    }       
+                    OffsetX = 0;
+                }else{
+                    if(this.PositionX - PosX > 0){
+                        OffsetX = -1;
+                    }else{ 
+                        OffsetX = 1;
+                    }
+                    OffsetY = 0;
+                }
+                if(await IsLineEmpty(this.PositionY,this.PositionX,NewPosY + (OffsetY * -1),NewPosX + (OffsetX * -1),OffsetY,OffsetX)){
+                    return true;
+                }
+            }else{
+                    return true; 
+            }
         }
-            
+              
         return false;
     }
 }

@@ -35,4 +35,12 @@ export class Knight extends ChessPiece{
         
         return false;
     }
+    async IsAttacking(PosY,PosX){
+        let OffsetY = Math.abs(this.PositionY - PosY);
+        let OffsetX = Math.abs(this.PositionX - PosX);
+        if((OffsetX == 1 && OffsetY == 2) || (OffsetX == 2 && OffsetY == 1)){
+            return true;
+        }
+        return false;
+    }
 }

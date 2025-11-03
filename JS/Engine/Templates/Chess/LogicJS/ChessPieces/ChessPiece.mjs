@@ -138,6 +138,9 @@ export class ChessPiece extends ENGINE.Sprite{
     async IsCanMove(){
         return true;
     }
+    async IsAttacking(){
+        return await this.IsCanMove();
+    }
 }
 
 export async function IsLineEmpty(StartY,StartX,EndY,EndX,OffsetY,OffsetX){
