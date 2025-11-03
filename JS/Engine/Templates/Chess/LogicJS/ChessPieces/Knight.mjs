@@ -9,8 +9,8 @@ export class Knight extends ChessPiece{
     Clone(NewPosY = this.PositionY,NewPosX = this.PositionX,NewCoordY = this.CoordinatesY,NewCoordX = this.CoordinatesX){
         return new Knight(this.Texture,NewPosY,NewPosX,NewCoordY,NewCoordX,this.Team,this.Type);
     }
-    Move(NewPosY,NewPosX){
-        if(this.IsCanMove(NewPosY,NewPosX)){
+    async Move(NewPosY,NewPosX){
+        if(await this.IsCanMove(NewPosY,NewPosX)){
             this.PositionX = NewPosX;
             this.PositionY = NewPosY;
             this.CoordinatesX = this.GetSizeX() * NewPosX;
@@ -19,7 +19,7 @@ export class Knight extends ChessPiece{
         }   
         return false;
     }
-    IsCanMove(NewPosY,NewPosX){
+    async IsCanMove(NewPosY,NewPosX){
         let NewTileData = LOCALCONST.GamePiecesTileMap.GetTiles()[NewPosY][NewPosX];
         let OffsetY = Math.abs(this.PositionY - NewPosY);
         let OffsetX = Math.abs(this.PositionX - NewPosX);

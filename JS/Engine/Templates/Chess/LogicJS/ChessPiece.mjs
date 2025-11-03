@@ -125,7 +125,7 @@ export class ChessPiece extends ENGINE.Sprite{
     SetType(NewType){
         this.Type = NewType;
     }
-    Move(NewPosY,NewPosX){
+    async Move(NewPosY,NewPosX){
         if(this.IsCanMove()){
             this.PositionX = NewPosX;
             this.PositionY = NewPosY;
@@ -135,7 +135,39 @@ export class ChessPiece extends ENGINE.Sprite{
         }   
         return false;
     }
-    IsCanMove(){
+    async IsCanMove(){
         return true;
     }
+}
+
+export async function IsLineEmpty(StartY,StartX,EndY,EndX,OffsetY,OffsetX){
+    let TilesData = LOCALCONST.GamePiecesTileMap.GetTiles();
+    let CurrentY = StartY;
+    let CurrentX = StartX;
+    if(OffsetY === 0){
+        while(CurrentX != EndX){
+            CurrentX += OffsetX;
+            if(TilesData[CurrentY][CurrentX] !== undefined){
+                return false;
+            }
+        }
+    }
+    if(OffsetX === 0){
+        while(CurrentY != EndY){
+            CurrentY += OffsetY;
+            if(TilesData[CurrentY][CurrentX] !== undefined){
+                return false;
+            }
+        }
+    }
+    if(OffsetX !== 0 && OffsetY !== 0){
+        while(CurrentY != EndY && CurrentX != EndX){
+            CurrentY += OffsetY;
+            CurrentX += OffsetX
+            if(TilesData[CurrentY][CurrentX] !== undefined){
+                return false;
+            }
+        }
+    }
+    return true;
 }
