@@ -8,7 +8,7 @@ export async function GetClickedCheesPiece(ClickedBoardTile){
 export async function IsTileAttacked(PosY,PosX,AttackingTeam) {
     let AttackingPiaces = await GetPiacesByTeam(AttackingTeam);
     for(let x = 0; x < AttackingPiaces.length;x++){
-        if(await AttackingPiaces[x].IsCanMove(PosY,PosX) == true){
+        if(await AttackingPiaces[x].IsAttacking(PosY,PosX) === true){
             return true;
         }
     }
@@ -26,7 +26,7 @@ export async function GetKingByTeam(Team) {
 }
 
 export async function IsKingAttacked(Team) {
-    let King = GetKingByTeam(Team);
+    let King = await GetKingByTeam(Team);
     if(await IsTileAttacked(King.PositionY,King.PositionX,await GetEnemyTeam(King.Team)) == true){
         return true
     }

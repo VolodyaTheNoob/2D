@@ -30,6 +30,7 @@ export class Game{
     async ProcessPlayerInput(){
         await this.ProcessPlayerClick();
         if(await this.ProcessPlayerMove() === true){
+
             await this.ChangeCurrentTeamMove();
         }
         
@@ -52,22 +53,29 @@ export class Game{
                 let ClickedObject = this.AllObjectsTileMap.GetTileByIndex(ClickedTile["Y"],ClickedTile["X"]);
                 if(this.CurrentPlayerFocusedPiece !== ClickedObject){
                     if(ClickedObject !== undefined){
-                        if(this.CurrentPlayerFocusedPiece.Team === ClickedObject.Team){
-                            //Just changing focused object
-                            this.CurrentPlayerFocusedPiece = ClickedTile;
-                        }else{
+                        try{
+                            if(this.CurrentPlayerFocusedPiece.Team === ClickedObject.Team){
+                                //Just changing focused object
+                                this.CurrentPlayerFocusedPiece = ClickedTile;
+                            }else{
+                                if(await this.CurrentPlayerFocusedPiece.IsCanMove(ClickedTile["Y"],ClickedTile["X"])){
+                                    this.CurrentPlayerFocusedTile = ClickedTile;
+                                }else{
+                                    this.CurrentPlayerFocusedTile = undefined;
+                                }
+                            }
+                        }catch(error){
+                            console.log(error);
+                        }
+                    }else{
+                        try{
                             if(await this.CurrentPlayerFocusedPiece.IsCanMove(ClickedTile["Y"],ClickedTile["X"])){
                                 this.CurrentPlayerFocusedTile = ClickedTile;
                             }else{
                                 this.CurrentPlayerFocusedTile = undefined;
                             }
-                        }
-                    }else{
-                        console.log(this.CurrentPlayerFocusedPiece);
-                        if(await this.CurrentPlayerFocusedPiece.IsCanMove(ClickedTile["Y"],ClickedTile["X"])){
-                            this.CurrentPlayerFocusedTile = ClickedTile;
-                        }else{
-                            this.CurrentPlayerFocusedTile = undefined;
+                        }catch(error){
+                            console.log(error);
                         }
                     }
                 }else{
@@ -78,13 +86,27 @@ export class Game{
     }
     async ProcessPlayerMove(){
         if(this.CurrentPlayerFocusedTile !== undefined){
-            let PrevPosY = this.CurrentPlayerFocusedPiece.PositionY;
+            let PrevPosY = this.CurrentPlayerFocusedPiece.PositionY
             let PrevPosX = this.CurrentPlayerFocusedPiece.PositionX;
-            await this.CurrentPlayerFocusedPiece.Move(this.CurrentPlayerFocusedTile["Y"],this.CurrentPlayerFocusedTile["X"]);
-            this.CurrentPlayerMove.GameData.DestroyedPieces.push(this.AllObjectsTileMap.GetTileByIndex(this.CurrentPlayerFocusedTile["Y"],this.CurrentPlayerFocusedTile["X"]));
+            let NewPosY = this.CurrentPlayerFocusedTile["Y"];
+            let NewPosX = this.CurrentPlayerFocusedTile["X"];
+            let PrevPosSavedPiece = this.AllObjectsTileMap.GetTileByIndex(PrevPosY,PrevPosX);
+            let NewPosSavedPiece = this.AllObjectsTileMap.GetTileByIndex(NewPosY,NewPosX); 
+            PrevPosSavedPiece = PrevPosSavedPiece.Clone();
+            if(NewPosSavedPiece !== undefined){
+                NewPosSavedPiece = NewPosSavedPiece.Clone();
+            }            
+            await this.CurrentPlayerFocusedPiece.Move(NewPosY,NewPosX);
             this.AllObjectsTileMap.SetTileByIndex(PrevPosY,PrevPosX,undefined);
-            this.AllObjectsTileMap.SetTileByIndex(this.CurrentPlayerFocusedTile["Y"],this.CurrentPlayerFocusedTile["X"],this.CurrentPlayerFocusedPiece); 
-            return true;
+            this.AllObjectsTileMap.SetTileByIndex(NewPosY,NewPosX,this.CurrentPlayerFocusedPiece); 
+            if(await GameLogic.IsKingAttacked(PrevPosSavedPiece.Team) == false){
+                return true;
+            }else{
+                await this.CurrentPlayerFocusedPiece.Move(PrevPosY,PrevPosX);
+                this.AllObjectsTileMap.SetTileByIndex(PrevPosY,PrevPosX,this.CurrentPlayerFocusedPiece);
+                this.AllObjectsTileMap.SetTileByIndex(NewPosY,NewPosX,NewPosSavedPiece);
+                return false;
+            }
         }
         return false;
     }

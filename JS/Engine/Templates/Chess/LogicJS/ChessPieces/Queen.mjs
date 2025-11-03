@@ -147,7 +147,7 @@ export class Queen extends ChessPiece{
                     }
                     OffsetY = 0;
                 }
-                if(await IsLineEmpty(this.PositionY,this.PositionX,NewPosY + (OffsetY * -1),NewPosX + (OffsetX * -1),OffsetY,OffsetX)){
+                if(await IsLineEmpty(this.PositionY,this.PositionX,PosY + (OffsetY * -1),PosX + (OffsetX * -1),OffsetY,OffsetX)){
                     return true;
                 }
             }else{
@@ -176,10 +176,10 @@ export class Queen extends ChessPiece{
                     }else{
                         OffsetX = -1;
                     }
-                    if(await IsLineEmpty(this.PositionY,this.PositionX,NewPosY + (OffsetY * -1),NewPosX + (OffsetX * -1),OffsetY,OffsetX)){
+                    if(await IsLineEmpty(this.PositionY,this.PositionX,PosY + (OffsetY * -1),PosX + (OffsetX * -1),OffsetY,OffsetX)){
                         return true;
                     }else{
-                        if(await IsLineEmpty(this.PositionY,this.PositionX,NewPosY + (OffsetY * -1),NewPosX + (OffsetX * -1),OffsetY,OffsetX)){
+                        if(await IsLineEmpty(this.PositionY,this.PositionX,PosY + (OffsetY * -1),PosX + (OffsetX * -1),OffsetY,OffsetX)){
                             return true;
                         }                            
                     }

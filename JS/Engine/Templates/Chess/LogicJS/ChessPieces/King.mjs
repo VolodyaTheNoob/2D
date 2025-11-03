@@ -43,10 +43,9 @@ export class King extends ChessPiece{
         }  
         return false;
     }
-    async IsAttacking(){
-        let NewTileData = LOCALCONST.GamePiecesTileMap.GetTiles()[NewPosY][NewPosX];
-        let OffsetY = this.PositionY - NewPosY;
-        let OffsetX = this.PositionX - NewPosX;
+    async IsAttacking(PosY,PosX){
+        let OffsetY = this.PositionY - PosY;
+        let OffsetX = this.PositionX - PosX;
         if(Math.abs(OffsetY) == 1 || Math.abs(OffsetX) == 1){
             return true;
         }
