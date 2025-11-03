@@ -5,6 +5,7 @@ import {PlayerInput} from "./LogicJS/GameData/Player/PlayerInput.mjs"
 import { RenderTileMap, SmartRender} from "./LogicJS/GameData/GameRender.mjs";
 import { GetClickedCheesPiece,MoveLogic,MovePieceWithClick } from "./LogicJS/GameData/GameLogic.mjs";
 
+//Used to store time
 let lastTimestamp = 0;
 
 export async function StartGame(){
@@ -22,6 +23,7 @@ export async function StartGame(){
         await LOCALCONST.Chess.Render();
         setTimeout(()=>{requestAnimationFrame(GameLoop)},100); //Looping loop
     }
+
     requestAnimationFrame(GameLoop);//first call of loop
 }
 StartGame();
