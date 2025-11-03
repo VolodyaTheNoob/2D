@@ -1,7 +1,7 @@
-import * as LOCALCONST from "../GameGlobalData/LocalConstants.mjs";
+import * as LOCALCONST from "../GameData/LocalConstants.mjs";
 import { ChessPiece } from "./ChessPiece.mjs";
 import { IsLineEmpty } from "./ChessPiece.mjs";
-import { IsTileAttacked } from "../GameLogic.mjs";
+import { IsTileAttacked } from "../GameData/GameLogic.mjs";
 
 export class King extends ChessPiece{
     constructor(SpriteTexture = undefined,PosY = undefined,PosX = undefined,CoordY = undefined,CoordX = undefined,_Team = undefined,_Type = undefined){

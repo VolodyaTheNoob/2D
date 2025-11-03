@@ -1,8 +1,8 @@
-import { Input } from "../../EngineImports.mjs";
-import * as ENGINE from "../../EngineImports.mjs"; 
-import * as LOCALCONST from "./LocalConstants.mjs";
+import { Input } from "../../../EngineImports.mjs";
+import * as ENGINE from "../../../EngineImports.mjs"; 
+import * as LOCALCONST from "../LocalConstants.mjs";
 
-export class UserInput extends Input{
+export class PlayerInput extends Input{
     constructor(_DOM){
         super();
         this.DOM = _DOM;
@@ -17,10 +17,10 @@ export class UserInput extends Input{
     }
 }
 
-export let PlayerInput = new UserInput(ENGINE.CONST.MainSceneDOM);  
+export let _PlayerInput = new PlayerInput(ENGINE.CONST.MainSceneDOM);  
 
-PlayerInput.AddEventFunction("mousemove",GetUserMouseCoordinates,PlayerInput);
-        function GetUserMouseCoordinates(InputClass){
+_PlayerInput.AddEventFunction("mousemove",GetUserMouseCoordinates,_PlayerInput);
+export function GetUserMouseCoordinates(InputClass){
             const BoardSize = 64;
             let MouseRawCoordinatesObjects = new Object();
             let MouseCoordinatesObjects = new Object();
@@ -39,8 +39,8 @@ PlayerInput.AddEventFunction("mousemove",GetUserMouseCoordinates,PlayerInput);
                 InputClass.CurrentBoardTile = BoardTile;
             });
         }
-    PlayerInput.AddEventFunction("mousemove",SetIsUserMouseDown,PlayerInput);
-        function SetIsUserMouseDown(InputClass){
+    _PlayerInput.AddEventFunction("mousemove",SetIsUserMouseDown,_PlayerInput);
+export function SetIsUserMouseDown(InputClass){
         let MouseDownEventName = "mousedown";
         let MouseUpEventName = "mouseup";
         InputClass.DOM.addEventListener(MouseDownEventName,  (e) =>{

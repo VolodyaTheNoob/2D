@@ -1,5 +1,5 @@
-import * as LOCALCONST from "./GameGlobalData/LocalConstants.mjs";
-import { PlayerInput } from "./GameGlobalData/UserInput.mjs";
+import * as LOCALCONST from "./LocalConstants.mjs";
+import { PlayerInput } from "./Player/PlayerInput.mjs";
 
 export async function GetClickedCheesPiece(ClickedBoardTile){
     return LOCALCONST.GamePiecesTileMap.GetTiles()[ClickedBoardTile["Y"]][ClickedBoardTile["X"]];

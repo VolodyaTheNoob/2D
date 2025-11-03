@@ -1,6 +1,6 @@
 import * as ENGINE from "../../EngineImports.mjs"; 
 import * as LOCALCONST from "./LocalConstants.mjs";
-   
+
 export function RenderTileMap(TileMap){
     let _TileMap = TileMap.GetTiles();
     for(let y = 0; y < TileMap.SizeY;y++){

@@ -1,10 +1,11 @@
-import * as LOCALCONST from "../GameGlobalData/LocalConstants.mjs";
+import * as LOCALCONST from "../GameData/LocalConstants.mjs";
 import { ChessPiece } from "./ChessPiece.mjs";
 import { IsLineEmpty } from "./ChessPiece.mjs";
 
 export class Rook extends ChessPiece{
     constructor(SpriteTexture = undefined,PosY = undefined,PosX = undefined,CoordY = undefined,CoordX = undefined,_Team = undefined,_Type = undefined){
         super(SpriteTexture,PosY,PosX,CoordY,CoordX,_Team,_Type);
+        this.AlreadyMoved = false;
     }
     Clone(NewPosY = this.PositionY,NewPosX = this.PositionX,NewCoordY = this.CoordinatesY,NewCoordX = this.CoordinatesX){
         return new Rook(this.Texture,NewPosY,NewPosX,NewCoordY,NewCoordX,this.Team,this.Type);

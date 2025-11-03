@@ -1,14 +1,13 @@
 import * as ENGINE from "./EngineImports.mjs";
-import * as LOCALCONST from "./LogicJS/GameGlobalData/LocalConstants.mjs";
-import { ResizeCanvasToChessBoard } from "./LogicJS/GameGlobalData/Visual.mjs";
-import {PlayerInput, UserInput} from "./LogicJS/GameGlobalData/UserInput.mjs"
-import { RenderTileMap, SmartRender} from "./LogicJS/GameGlobalData/GameRender.mjs";
-import { GetClickedCheesPiece,MoveLogic,MovePieceWithClick } from "./LogicJS/GameLogic.mjs";
-import { Pawn } from "./LogicJS/ChessPieces/Pawn.mjs";
+import * as LOCALCONST from "./LogicJS/GameData/LocalConstants.mjs";
+import { ResizeCanvasToChessBoard } from "./LogicJS/GameData/Visual.mjs";
+import {PlayerInput} from "./LogicJS/GameData/Player/PlayerInput.mjs"
+import { RenderTileMap, SmartRender} from "./LogicJS/GameData/GameRender.mjs";
+import { GetClickedCheesPiece,MoveLogic,MovePieceWithClick } from "./LogicJS/GameData/GameLogic.mjs";
 
 let lastTimestamp = 0;
 
-export async function Chess(){
+export async function StartGame(){
     //Loading all dynamic constants
     await LOCALCONST.LoadAllDynamicConstants();
     //creating visual
@@ -18,17 +17,14 @@ export async function Chess(){
         const deltaTime = timestamp - lastTimestamp;
         lastTimestamp = timestamp;
         //GameLogic
-        let IsMoved = await MoveLogic();
+        await LOCALCONST.Chess.ProcessPlayerMove();
         //Graphic Render
-        ENGINE.CONST.MainSceneContext.clearRect(0, 0, ENGINE.CONST.MainSceneContext.width, ENGINE.CONST.MainSceneContext.height);
-        LOCALCONST.ChessBoardRender.Render();
-        LOCALCONST.ChessPiecesRender.Render();
+        await LOCALCONST.Chess.Render();
         setTimeout(()=>{requestAnimationFrame(GameLoop)},100); //Looping loop
-        
     }
     requestAnimationFrame(GameLoop);//first call of loop
 }
-Chess();
+StartGame();
 
 
 

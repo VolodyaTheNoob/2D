@@ -1,4 +1,4 @@
-import * as LOCALCONST from "../GameGlobalData/LocalConstants.mjs";
+import * as LOCALCONST from "../GameData/LocalConstants.mjs";
 import { ChessPiece } from "./ChessPiece.mjs";
 import { IsLineEmpty } from "./ChessPiece.mjs";
 
