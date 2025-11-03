@@ -231,15 +231,14 @@ export async function CreateChessPieces(){
     Player1Objects = [WhiteRook.Clone(7,0),WhiteKnight.Clone(7,1),WhiteBishop.Clone(7,2),WhiteQueen.Clone(7,3),WhiteKing.Clone(7,4),WhiteBishop.Clone(7,5),WhiteKnight.Clone(7,6),WhiteRook.Clone(7,7),
         WhitePawn.Clone(6,0),WhitePawn.Clone(6,1),WhitePawn.Clone(6,2),WhitePawn.Clone(6,3),WhitePawn.Clone(6,4),WhitePawn.Clone(6,5),WhitePawn.Clone(6,6),WhitePawn.Clone(6,7)];
     GamePieces = [
-        [Player1Objects[0],Player1Objects[1],Player1Objects[2],Player1Objects[3],Player1Objects[4],Player1Objects[5],Player1Objects[6],Player1Objects[7]],
-            [Player1Objects[8],Player1Objects[9],Player1Objects[10],Player1Objects[11],Player1Objects[12],Player1Objects[13],Player1Objects[14],Player1Objects[15]],
-            [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
-            [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
-            [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
-            [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
+       [Player2Objects[8],Player2Objects[9],Player2Objects[10],Player2Objects[11],Player2Objects[12],Player2Objects[13],Player2Objects[14],Player2Objects[15]],
        [Player2Objects[0],Player2Objects[1],Player2Objects[2],Player2Objects[3],Player2Objects[4],Player2Objects[5],Player2Objects[6],Player2Objects[7]],
-            [Player2Objects[8],Player2Objects[9],Player2Objects[10],Player2Objects[11],Player2Objects[12],Player2Objects[13],Player2Objects[14],Player2Objects[15]]
-    ]
+            [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
+            [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
+            [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
+            [undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined],
+        [Player1Objects[8],Player1Objects[9],Player1Objects[10],Player1Objects[11],Player1Objects[12],Player1Objects[13],Player1Objects[14],Player1Objects[15]],
+        [Player1Objects[0],Player1Objects[1],Player1Objects[2],Player1Objects[3],Player1Objects[4],Player1Objects[5],Player1Objects[6],Player1Objects[7]]]
     //SettingPositions
     for(let y = 0; y < ChessBoardSize;y++){
         for(let x = 0; x < ChessBoardSize;x++){

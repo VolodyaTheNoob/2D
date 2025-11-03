@@ -3,5 +3,6 @@ export class GameData{
         this.Team = _Team;
         this.MovesCount = _MovesCount;
         this.IsCanMove = _IsCanMove;
+        this.DestroyedPieces = Array();
     }
 }
