@@ -1,7 +1,6 @@
-import * as ENGINE from "../../../Chess/EngineImports.mjs";
-import * as LOCALCONST from ".././LocalConstants.mjs";
-import { ChessPiece } from "../ChessPiece.mjs";
-import { IsLineEmpty } from "../ChessPiece.mjs";
+import * as LOCALCONST from "../GameGlobalData/LocalConstants.mjs";
+import { ChessPiece } from "./ChessPiece.mjs";
+import { IsLineEmpty } from "./ChessPiece.mjs";
 
 export class Pawn extends ChessPiece{
     constructor(SpriteTexture = undefined,PosY = undefined,PosX = undefined,CoordY = undefined,CoordX = undefined,_Team = undefined,_Type = undefined){
@@ -36,7 +35,6 @@ export class Pawn extends ChessPiece{
                                     return true;
                                 }
                             }else{;
-                                console.log(1);
                                 if(await IsLineEmpty(this.PositionY,this.PositionX,NewPosY,NewPosX,1,0)){
                                     return true;
                                 }

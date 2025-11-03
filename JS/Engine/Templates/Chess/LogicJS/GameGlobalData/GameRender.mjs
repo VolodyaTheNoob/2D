@@ -1,4 +1,4 @@
-import * as ENGINE from "../EngineImports.mjs"; 
+import * as ENGINE from "../../EngineImports.mjs"; 
 import * as LOCALCONST from "./LocalConstants.mjs";
    
 export function RenderTileMap(TileMap){
@@ -48,15 +48,7 @@ function BackgroundChanger(CurrentTileColor,PieceImageData,[SizeX,SizeY]){
     }
     return PieceImageData;
 }
-//For now will be used by default
-export async function MovePieceWithClick(FocusedPiece,ClickedTile){
-    let PrevPosX = FocusedPiece.GetX();
-    let PrevPosY = FocusedPiece.GetY();
-    if(FocusedPiece.Move(ClickedTile["Y"],ClickedTile["X"])){
-        LOCALCONST.GamePiecesTileMap.SetTileByIndex(PrevPosY,PrevPosX,undefined);
-        LOCALCONST.GamePiecesTileMap.SetTileByIndex(ClickedTile["Y"],ClickedTile["X"],FocusedPiece);
-    }
-}
+
 //I just will put it in back burner and not use for now - becouse I need more expirience and want to make MVP of this Chess app
 //MVP - I mean minimum valiable product, I do it for me just call it like this
 export async function MovePieceWithFocus(FocusedPiece){

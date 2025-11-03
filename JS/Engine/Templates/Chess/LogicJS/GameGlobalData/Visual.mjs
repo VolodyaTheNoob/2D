@@ -1,4 +1,4 @@
-import { CONST } from "../EngineImports.mjs"; 
+import { CONST } from "../../EngineImports.mjs"; 
 
 export function ResizeCanvasToChessBoard(ChessBoardSize,ChessBoardTileSizeX,ChessBoardTileSizeY){
     let Width = ChessBoardTileSizeX * ChessBoardSize;

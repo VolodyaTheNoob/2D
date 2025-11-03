@@ -1,5 +1,5 @@
-import { Input } from "../EngineImports.mjs";
-import * as ENGINE from "../EngineImports.mjs"; 
+import { Input } from "../../EngineImports.mjs";
+import * as ENGINE from "../../EngineImports.mjs"; 
 import * as LOCALCONST from "./LocalConstants.mjs";
 
 export class UserInput extends Input{
@@ -13,6 +13,7 @@ export class UserInput extends Input{
         this.ClickedBoardCalculatedCoordinates = undefined;
         this.ClickedBoardTile = undefined;
         this.IsMouseDown = false;
+        this.FocusedPiece = undefined;
     }
 }
 

@@ -1,14 +1,14 @@
-import { ModuleLoader } from "../../../AsyncModuleLoader.mjs";
-import {CONST} from "../EngineImports.mjs";
-import * as ENGINE from "../EngineImports.mjs";
-import { ChessPiece } from "./ChessPiece.mjs";
+import { ModuleLoader } from "../../../../AsyncModuleLoader.mjs";
+import {CONST} from "../../EngineImports.mjs";
+import * as ENGINE from "../../EngineImports.mjs";
+import { ChessPiece } from "../ChessPieces/ChessPiece.mjs";
 import { RenderTileMap,SmartRender } from "./GameRender.mjs";
-import { Pawn } from "./ChessPieces/Pawn.mjs";
-import { Knight } from "./ChessPieces/Knight.mjs";
-import { Rook } from "./ChessPieces/Rook.mjs";
-import { Bishop } from "./ChessPieces/Bishop.mjs";
-import { Queen } from "./ChessPieces/Queen.mjs";
-import { King } from "./ChessPieces/King.mjs";
+import { Pawn } from "../ChessPieces/Pawn.mjs";
+import { Knight } from "../ChessPieces/Knight.mjs";
+import { Rook } from "../ChessPieces/Rook.mjs";
+import { Bishop } from "../ChessPieces/Bishop.mjs";
+import { Queen } from "../ChessPieces/Queen.mjs";
+import { King } from "../ChessPieces/King.mjs";
 
 //Constants
 //GameDeffaultSizes

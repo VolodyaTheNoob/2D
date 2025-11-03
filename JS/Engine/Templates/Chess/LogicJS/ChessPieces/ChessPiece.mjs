@@ -1,5 +1,5 @@
-import * as ENGINE from "../EngineImports.mjs"; 
-import * as LOCALCONST from "./LocalConstants.mjs";
+import * as ENGINE from "../../EngineImports.mjs"; 
+import * as LOCALCONST from "../GameGlobalData/LocalConstants.mjs";
 
 export class ChessPiece extends ENGINE.Sprite{
     constructor(SpriteTexture = undefined,PosY = undefined,PosX = undefined,CoordY = undefined,CoordX = undefined,_Team = undefined,_Type = undefined){

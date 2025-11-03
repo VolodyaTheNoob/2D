@@ -1,7 +1,6 @@
-import * as ENGINE from "../../../Chess/EngineImports.mjs";
-import * as LOCALCONST from ".././LocalConstants.mjs";
-import { ChessPiece } from "../ChessPiece.mjs";
-import { IsLineEmpty } from "../ChessPiece.mjs";
+import * as LOCALCONST from "../GameGlobalData/LocalConstants.mjs";
+import { ChessPiece } from "./ChessPiece.mjs";
+import { IsLineEmpty } from "./ChessPiece.mjs";
 import { IsTileAttacked } from "../GameLogic.mjs";
 
 export class King extends ChessPiece{
@@ -13,15 +12,11 @@ export class King extends ChessPiece{
         return new King(this.Texture,NewPosY,NewPosX,NewCoordY,NewCoordX,this.Team,this.Type);
     }
     async Move(NewPosY,NewPosX){
-        if(await this.IsCanMove(NewPosY,NewPosX)){
-            this.PositionX = NewPosX;
-            this.PositionY = NewPosY;
-            this.CoordinatesX = this.GetSizeX() * NewPosX;
-            this.CoordinatesY = this.GetSizeY() * NewPosY;
-            this.AlreadyMoved = true;
-            return true;
-        }   
-        return false;
+        this.PositionX = NewPosX;
+        this.PositionY = NewPosY;
+        this.CoordinatesX = this.GetSizeX() * NewPosX;
+        this.CoordinatesY = this.GetSizeY() * NewPosY;
+        this.AlreadyMoved = true;
     }
     async IsCanMove(NewPosY,NewPosX){
         let NewTileData = LOCALCONST.GamePiecesTileMap.GetTiles()[NewPosY][NewPosX];
