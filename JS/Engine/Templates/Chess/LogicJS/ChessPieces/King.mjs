@@ -12,11 +12,18 @@ export class King extends ChessPiece{
         return new King(this.Texture,NewPosY,NewPosX,NewCoordY,NewCoordX,this.Team,this.Type);
     }
     async Move(NewPosY,NewPosX){
-        this.PositionX = NewPosX;
-        this.PositionY = NewPosY;
-        this.CoordinatesX = this.GetSizeX() * NewPosX;
-        this.CoordinatesY = this.GetSizeY() * NewPosY;
-        this.AlreadyMoved = true;
+        if(await this.IsCanMove(NewPosY,NewPosX)){
+            this.PositionX = NewPosX;
+            this.PositionY = NewPosY;
+            this.CoordinatesX = this.GetSizeX() * NewPosX;
+            this.CoordinatesY = this.GetSizeY() * NewPosY;
+            this.AlreadyMoved = true;
+            return true;
+        }
+        return false;
+    }
+    async Place(PosY,PosX){
+        super.Place(PosY,PosX);
     }
     async IsCanMove(NewPosY,NewPosX){
         let NewTileData = LOCALCONST.GamePiecesTileMap.GetTiles()[NewPosY][NewPosX];
@@ -30,6 +37,7 @@ export class King extends ChessPiece{
         }
         if((Math.abs(OffsetY) <= 1) && (Math.abs(OffsetX) <= 1)){
             if(OffsetY != 0 || OffsetX != 0){
+                console.log(await IsTileAttacked(NewPosY,NewPosX,OtherTeam));
                 if(await IsTileAttacked(NewPosY,NewPosX,OtherTeam) == false){
                     if(NewTileData === undefined){
                         return true;
@@ -46,8 +54,10 @@ export class King extends ChessPiece{
     async IsAttacking(PosY,PosX){
         let OffsetY = this.PositionY - PosY;
         let OffsetX = this.PositionX - PosX;
-        if(Math.abs(OffsetY) == 1 || Math.abs(OffsetX) == 1){
-            return true;
+        if(Math.abs(OffsetY) != 0 && Math.abs(OffsetX) != 0){
+            if(Math.abs(OffsetY) == 1 || Math.abs(OffsetX) == 1){
+                return true;
+            }
         }
     }
 }

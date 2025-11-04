@@ -13,7 +13,6 @@ export class PlayerInput extends Input{
         this.ClickedBoardCalculatedCoordinates = undefined;
         this.ClickedBoardTile = undefined;
         this.IsMouseDown = false;
-        this.FocusedPiece = undefined;
     }
 }
 

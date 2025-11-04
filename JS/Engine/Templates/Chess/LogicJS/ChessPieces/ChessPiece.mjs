@@ -135,6 +135,14 @@ export class ChessPiece extends ENGINE.Sprite{
         }   
         return false;
     }
+    async Place(PosY,PosX){
+        this.PositionX = PosX;
+        this.PositionY = PosY;
+        this.CoordinatesX = this.GetSizeX() * PosX;
+        this.CoordinatesY = this.GetSizeY() * PosY;
+        return true;
+    }
+
     async IsCanMove(){
         return true;
     }

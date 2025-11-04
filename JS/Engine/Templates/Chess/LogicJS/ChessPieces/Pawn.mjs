@@ -21,6 +21,9 @@ export class Pawn extends ChessPiece{
         }   
         return false;
     }
+    async Place(PosY,PosX){
+        super.Place(PosY,PosX);
+    }
     async IsCanMove(NewPosY,NewPosX){
         let NewTileData = LOCALCONST.GamePiecesTileMap.GetTiles()[NewPosY][NewPosX];
         let OffsetY = this.PositionY - NewPosY;

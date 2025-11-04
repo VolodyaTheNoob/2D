@@ -9,6 +9,7 @@ export async function IsTileAttacked(PosY,PosX,AttackingTeam) {
     let AttackingPiaces = await GetPiacesByTeam(AttackingTeam);
     for(let x = 0; x < AttackingPiaces.length;x++){
         if(await AttackingPiaces[x].IsAttacking(PosY,PosX) === true){
+            console.log(AttackingPiaces[x]);
             return true;
         }
     }

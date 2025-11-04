@@ -6,7 +6,7 @@ import { RenderTileMap, SmartRender} from "./LogicJS/GameData/GameRender.mjs";
 import { GetClickedCheesPiece,MoveLogic,MovePieceWithClick } from "./LogicJS/GameData/GameLogic.mjs";
 
 //Used to store time
-let lastTimestamp = 0;
+let LastTimestamp = 0;
 
 export async function StartGame(){
     //Loading all dynamic constants
@@ -14,9 +14,9 @@ export async function StartGame(){
     //creating visual
     ResizeCanvasToChessBoard(LOCALCONST.ChessBoardSize,ENGINE.CONST.SizeX,ENGINE.CONST.SizeY);
     //Start of Game Loop - all magic do here
-    async function GameLoop(timestamp) {
-        const deltaTime = timestamp - lastTimestamp;
-        lastTimestamp = timestamp;
+    async function GameLoop(Timestamp) {
+        const deltaTime = Timestamp - LastTimestamp;
+        LastTimestamp = Timestamp;
         //GameLogic
         await LOCALCONST.Chess.ProcessPlayerInput();
         //Graphic Render

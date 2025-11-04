@@ -19,6 +19,9 @@ export class Bishop extends ChessPiece{
         }   
         return false;
     }
+    async Place(PosY,PosX){
+        super.Place(PosY,PosX);
+    }
     async IsCanMove(NewPosY,NewPosX){
         let NewTileData = LOCALCONST.GamePiecesTileMap.GetTiles()[NewPosY][NewPosX];
         let OffsetY = Math.abs(this.PositionY - NewPosY);
@@ -86,10 +89,10 @@ export class Bishop extends ChessPiece{
                     }else{
                         OffsetX = -1;
                     }
-                    if(await IsLineEmpty(this.PositionY,this.PositionX,NewPosY + (OffsetY * -1),NewPosX + (OffsetX * -1),OffsetY,OffsetX)){
+                    if(await IsLineEmpty(this.PositionY,this.PositionX,PosY + (OffsetY * -1),PosX + (OffsetX * -1),OffsetY,OffsetX)){
                         return true;
                     }else{
-                        if(await IsLineEmpty(this.PositionY,this.PositionX,NewPosY + (OffsetY * -1),NewPosX + (OffsetX * -1),OffsetY,OffsetX)){
+                        if(await IsLineEmpty(this.PositionY,this.PositionX,PosY + (OffsetY * -1),PosX + (OffsetX * -1),OffsetY,OffsetX)){
                             return true;
                         }                            
                     }

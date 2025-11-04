@@ -18,6 +18,9 @@ export class Knight extends ChessPiece{
         }   
         return false;
     }
+    async Place(PosY,PosX){
+        super.Place(PosY,PosX);
+    }
     async IsCanMove(NewPosY,NewPosX){
         let NewTileData = LOCALCONST.GamePiecesTileMap.GetTiles()[NewPosY][NewPosX];
         let OffsetY = Math.abs(this.PositionY - NewPosY);

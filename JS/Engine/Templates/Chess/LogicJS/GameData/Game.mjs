@@ -17,7 +17,6 @@ export class Game{
         */
         this.CurrentTeamMove = this.Teams[0];//ProcessPlayerMoveData
         this.CurrentPlayerMove = this.Player1;//ProcessPlayerMoveData
-        this.CurrentPlayerFocusedPiece = undefined;//ProcessPlayerClickData
         this.CurrentPlayerFocusedTile = undefined;//ProcessPlayerClickData
     }
     async Render(){
@@ -28,88 +27,68 @@ export class Game{
 
 
     async ProcessPlayerInput(){
-        await this.ProcessPlayerClick();
-        if(await this.ProcessPlayerMove() === true){
-
-            await this.ChangeCurrentTeamMove();
-        }
+        await this.ProcessClick();
         
     }
 
-    async ProcessPlayerClick(){
-        if(this.CurrentPlayerMove.Input.IsMouseDown == true){
-            let ClickedTile = this.CurrentPlayerMove.Input.ClickedBoardTile;
-            if(this.CurrentPlayerFocusedPiece === undefined){
-                this.CurrentPlayerFocusedPiece = this.AllObjectsTileMap.GetTileByIndex(ClickedTile["Y"],ClickedTile["X"]);
-                //If Player trying to focus enemy piece to move it - decline
-                if(this.CurrentPlayerFocusedPiece === undefined){
-                    this.CurrentPlayerFocusedPiece = undefined;
-                }else{
-                    if(this.CurrentPlayerMove.GameData.Team != this.CurrentPlayerFocusedPiece.Team){
-                        this.CurrentPlayerFocusedPiece = undefined;
+    async ProcessClick(){
+        if(this.CurrentPlayerMove.Input.IsMouseDown){
+            let [ClickedTileCoordsY,ClickedTileCoordsX] = [this.CurrentPlayerMove.Input.ClickedBoardTile["Y"],this.CurrentPlayerMove.Input.ClickedBoardTile["X"]];
+            let CurrentPlayerClickedTile = await this.GetClickedTile(ClickedTileCoordsY,ClickedTileCoordsX);
+            if(this.CurrentPlayerFocusedTile === undefined){
+                if(CurrentPlayerClickedTile !== undefined){
+                    //Player can only focuse self piece - if piece not chosen
+                    if(this.CurrentTeamMove === CurrentPlayerClickedTile.Team){
+                        this.CurrentPlayerFocusedTile = CurrentPlayerClickedTile;
                     }
                 }
             }else{
-                let ClickedObject = this.AllObjectsTileMap.GetTileByIndex(ClickedTile["Y"],ClickedTile["X"]);
-                if(this.CurrentPlayerFocusedPiece !== ClickedObject){
-                    if(ClickedObject !== undefined){
-                        try{
-                            if(this.CurrentPlayerFocusedPiece.Team === ClickedObject.Team){
-                                //Just changing focused object
-                                this.CurrentPlayerFocusedPiece = ClickedTile;
-                            }else{
-                                if(await this.CurrentPlayerFocusedPiece.IsCanMove(ClickedTile["Y"],ClickedTile["X"])){
-                                    this.CurrentPlayerFocusedTile = ClickedTile;
-                                }else{
-                                    this.CurrentPlayerFocusedTile = undefined;
-                                }
-                            }
-                        }catch(error){
-                            console.log(error);
-                        }
+                if(CurrentPlayerClickedTile !== undefined){
+                    if(CurrentPlayerClickedTile.Team === this.CurrentPlayerFocusedTile.Team){
+                        //If Player chose self piece - just change
+                        this.CurrentPlayerFocusedTile = CurrentPlayerClickedTile;
                     }else{
-                        try{
-                            if(await this.CurrentPlayerFocusedPiece.IsCanMove(ClickedTile["Y"],ClickedTile["X"])){
-                                this.CurrentPlayerFocusedTile = ClickedTile;
-                            }else{
-                                this.CurrentPlayerFocusedTile = undefined;
-                            }
-                        }catch(error){
-                            console.log(error);
+                        //Else Player want move
+                        if((await this.CurrentPlayerFocusedTile.IsCanMove(ClickedTileCoordsY,ClickedTileCoordsX)) === true){
+                            await this.ProcessPieceMove(ClickedTileCoordsY,ClickedTileCoordsX);
                         }
                     }
                 }else{
-                    this.CurrentPlayerFocusedTile = undefined;
+                    //Player want move also on Empty(undefined) Tile
+                    if((await this.CurrentPlayerFocusedTile.IsCanMove(ClickedTileCoordsY,ClickedTileCoordsX)) === true){
+                        await this.ProcessPieceMove(ClickedTileCoordsY,ClickedTileCoordsX);
+                    }
                 }
             }
         }
     }
-    async ProcessPlayerMove(){
-        if(this.CurrentPlayerFocusedTile !== undefined){
-            let PrevPosY = this.CurrentPlayerFocusedPiece.PositionY
-            let PrevPosX = this.CurrentPlayerFocusedPiece.PositionX;
-            let NewPosY = this.CurrentPlayerFocusedTile["Y"];
-            let NewPosX = this.CurrentPlayerFocusedTile["X"];
-            let PrevPosSavedPiece = this.AllObjectsTileMap.GetTileByIndex(PrevPosY,PrevPosX);
-            let NewPosSavedPiece = this.AllObjectsTileMap.GetTileByIndex(NewPosY,NewPosX); 
-            PrevPosSavedPiece = PrevPosSavedPiece.Clone();
-            if(NewPosSavedPiece !== undefined){
-                NewPosSavedPiece = NewPosSavedPiece.Clone();
-            }            
-            await this.CurrentPlayerFocusedPiece.Move(NewPosY,NewPosX);
-            this.AllObjectsTileMap.SetTileByIndex(PrevPosY,PrevPosX,undefined);
-            this.AllObjectsTileMap.SetTileByIndex(NewPosY,NewPosX,this.CurrentPlayerFocusedPiece); 
-            if(await GameLogic.IsKingAttacked(PrevPosSavedPiece.Team) == false){
-                return true;
-            }else{
-                await this.CurrentPlayerFocusedPiece.Move(PrevPosY,PrevPosX);
-                this.AllObjectsTileMap.SetTileByIndex(PrevPosY,PrevPosX,this.CurrentPlayerFocusedPiece);
-                this.AllObjectsTileMap.SetTileByIndex(NewPosY,NewPosX,NewPosSavedPiece);
-                return false;
-            }
+
+    async ProcessPieceMove(ClickedY,ClickedX){
+        let PrevTilePrevState = this.CurrentPlayerFocusedTile.Clone();
+        let NewTilePrevState = await this.GetClickedTile(ClickedY,ClickedX);
+        if(NewTilePrevState !== undefined){
+            NewTilePrevState = NewTilePrevState.Clone();
         }
-        return false;
+        this.AllObjectsTileMap.SetTileByIndex(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX,undefined);
+        this.AllObjectsTileMap.SetTileByIndex(ClickedY,ClickedX,this.CurrentPlayerFocusedTile);
+        await this.CurrentPlayerFocusedTile.Place(ClickedY,ClickedX);
+        if((await GameLogic.IsKingAttacked(this.CurrentPlayerFocusedTile.Team)) === true){
+            this.AllObjectsTileMap.SetTileByIndex(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX,this.CurrentPlayerFocusedTile);
+            await this.CurrentPlayerFocusedTile.Place(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX);
+            if(NewTilePrevState !== undefined){
+                this.AllObjectsTileMap.SetTileByIndex(ClickedY,ClickedX,NewTilePrevState.Clone());
+            }
+            this.AllObjectsTileMap.SetTileByIndex(ClickedY,ClickedX,NewTilePrevState);
+        }else{
+            await this.ChangeCurrentTeamMove();
+        }
     }
+
+    async GetClickedTile(PosY,PosX){
+        return this.AllObjectsTileMap.GetTileByIndex(PosY,PosX);
+    }
+
+
     async ChangeCurrentTeamMove(){
         if(this.CurrentTeamMove == this.Teams[0]){
             this.CurrentTeamMove = this.Teams[1];
@@ -118,7 +97,6 @@ export class Game{
             this.CurrentTeamMove = this.Teams[0];
             this.CurrentPlayerMove = this.Player1;
         }
-        this.CurrentPlayerFocusedPiece = undefined;
         this.CurrentPlayerFocusedTile = undefined;
     }
 

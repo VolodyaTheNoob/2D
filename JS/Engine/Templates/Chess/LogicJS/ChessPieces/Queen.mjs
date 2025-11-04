@@ -18,6 +18,9 @@ export class Queen extends ChessPiece{
             return true;
         }   
         return false;
+    }    
+    async Place(PosY,PosX){
+        super.Place(PosY,PosX);
     }
     async IsCanMove(NewPosY,NewPosX){
         if((await this.IsCanMoveStraight(NewPosY,NewPosX) === true) || (await this.IsCanMoveDiagonal(NewPosY,NewPosX) === true)){
