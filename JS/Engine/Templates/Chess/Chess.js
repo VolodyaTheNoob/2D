@@ -18,7 +18,7 @@ export async function StartGame(){
         const deltaTime = Timestamp - LastTimestamp;
         LastTimestamp = Timestamp;
         //GameLogic
-        await LOCALCONST.Chess.ProcessPlayerInput();
+        await LOCALCONST.Chess.ProcessGame();
         //Graphic Render
         await LOCALCONST.Chess.Render();
         setTimeout(()=>{requestAnimationFrame(GameLoop)},100); //Looping loop

@@ -49,6 +49,42 @@ export class Game{
         }
     }
 
+    async ProcessGame(){
+        if(await this.IsGameEnded() === false){
+            await this.ProcessPlayerInput();
+        }
+    }
+
+    async IsGameEnded(){
+        let CountOfAviableMoves = await this.GetCountOfPlayerMoves();
+        if(CountOfAviableMoves == 0){
+            return true;
+        }
+        return false;
+    }
+
+    async GetCountOfPlayerMoves(){
+        let CountOfMoves = 0;
+        let CurrentPlayerPieces = await this.GetPiecesByTeam(this.CurrentTeamMove);
+        
+        return CountOfMoves;
+    }
+
+    async GetPiecesByTeam(Team){
+        let AllBoardPieces = LOCALCONST.GamePiecesTileMap.GetTiles();
+        let PiecesByTeam = new Array();
+        for(let y = 0; y < LOCALCONST.ChessBoardSize;y++){
+           for(let x = 0; x < LOCALCONST.ChessBoardSize;x++){ 
+                if(AllBoardPiaces[y][x] !== undefined){
+                    if(AllBoardPieces[y][x].Team == Team){
+                        PiecesByTeam.push(AllBoardPieces[y][x]);
+                    }
+                }
+           }
+        }
+        return PiecesByTeam;
+    } 
+
     async ProcessPlayerInput(){
         let IsPlayerMovePiece = await this.ProcessClick();
         if(IsPlayerMovePiece === true){
