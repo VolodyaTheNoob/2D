@@ -26,7 +26,7 @@ export function SmartRender(ChessPieces,TileMap){
     }
 }
 
-function BackgroundChanger(CurrentTileColor,PieceImageData,[SizeX,SizeY]){
+export function BackgroundChanger(TileColor,PieceImageData,[SizeX,SizeY]){
     const PieceColor1= [0,0,0,255]; //for now like constants
     const PieceColor2 = [244,244,244,255]; //for now like constants
     for(let y = 0; y < SizeY;y+=1){
@@ -38,10 +38,10 @@ function BackgroundChanger(CurrentTileColor,PieceImageData,[SizeX,SizeY]){
             PieceImageData.data[x+1] != PieceColor2[1] &&
             PieceImageData.data[x+2] != PieceColor2[2]))
             {
-            PieceImageData.data[x] = CurrentTileColor[0];
-            PieceImageData.data[x+1] = CurrentTileColor[1];
-            PieceImageData.data[x+2] = CurrentTileColor[2];
-            PieceImageData.data[x+3] = CurrentTileColor[3];
+            PieceImageData.data[x] = TileColor[0];
+            PieceImageData.data[x+1] = TileColor[1];
+            PieceImageData.data[x+2] = TileColor[2];
+            PieceImageData.data[x+3] = TileColor[3];
            }
            
         }

@@ -36,11 +36,12 @@ export class King extends ChessPiece{
         }
         if((Math.abs(OffsetY) <= 1) && (Math.abs(OffsetX) <= 1)){
             if(OffsetY != 0 || OffsetX != 0){
-                if(await IsTileAttacked(NewPosY,NewPosX,OtherTeam) == false){
+                if(await IsTileAttacked(NewPosY,NewPosX,OtherTeam) === false){
+                    console.log("True");
                     if(NewTileData === undefined){
                         return true;
                     }else{
-                        if(NewTileData.Team != this.Team){
+                        if(NewTileData.Team !== this.Team){
                             return true;
                         }
                     }
@@ -87,9 +88,10 @@ export class King extends ChessPiece{
         let OffsetY = this.PositionY - PosY;
         let OffsetX = this.PositionX - PosX;
         if(Math.abs(OffsetY) != 0 && Math.abs(OffsetX) != 0){
-            if(Math.abs(OffsetY) == 1 || Math.abs(OffsetX) == 1){
+            if(Math.abs(OffsetY) <= 1 && Math.abs(OffsetX) <= 1){
                 return true;
             }
         }
+        return false;
     }
 }

@@ -25,12 +25,25 @@ export class Game{
         ENGINE.CONST.MainSceneContext.clearRect(0, 0, ENGINE.CONST.MainSceneContext.width, ENGINE.CONST.MainSceneContext.height);
         this.BackgroundRender.Render();
         this.ObjectsRender.Render();
+        if(this.CurrentPlayerFocusedTile !== undefined){
+            await this.AddVisualToInput();
+        }
     }
 
 
     async ProcessPlayerInput(){
-        await this.ProcessClick();
+        let IsPlayerMovePiece = await this.ProcessClick();
+        if(IsPlayerMovePiece === true){
+            let [ClickedTileCoordsY,ClickedTileCoordsX] = [this.CurrentPlayerMove.Input.ClickedBoardTile["Y"],this.CurrentPlayerMove.Input.ClickedBoardTile["X"]];
+            await this.ProcessPieceMove(ClickedTileCoordsY,ClickedTileCoordsX);
+        }
         
+    }
+
+    async AddVisualToInput(){
+        const PickedPieceBackgroundColor = [238,232,170,128];
+        let PieceImageData = RenderFunctions.BackgroundChanger(PickedPieceBackgroundColor,await this.CurrentPlayerFocusedTile.GetTexture(),[this.CurrentPlayerFocusedTile.SizeX,this.CurrentPlayerFocusedTile.SizeY]);
+        ENGINE.CONST.MainSceneContext.putImageData(PieceImageData,this.CurrentPlayerFocusedTile.CoordinatesX, this.CurrentPlayerFocusedTile.CoordinatesY);
     }
 
     async ProcessClick(){
@@ -52,17 +65,18 @@ export class Game{
                     }else{
                         //Else Player want move
                         if((await this.CurrentPlayerFocusedTile.IsCanMove(ClickedTileCoordsY,ClickedTileCoordsX)) === true){
-                            await this.ProcessPieceMove(ClickedTileCoordsY,ClickedTileCoordsX);
+                            return true;
                         }
                     }
                 }else{
                     //Player want move also on Empty(undefined) Tile
                     if((await this.CurrentPlayerFocusedTile.IsCanMove(ClickedTileCoordsY,ClickedTileCoordsX)) === true){
-                        await this.ProcessPieceMove(ClickedTileCoordsY,ClickedTileCoordsX);
+                        return true;
                     }
                 }
             }
         }
+        return false;
     }
 
     async ProcessPieceMove(ClickedY,ClickedX){

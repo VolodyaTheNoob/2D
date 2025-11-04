@@ -16,9 +16,6 @@ export class PlayerInput extends Input{
     }
 }
 
-export let _PlayerInput = new PlayerInput(ENGINE.CONST.MainSceneDOM);  
-
-_PlayerInput.AddEventFunction("mousemove",GetUserMouseCoordinates,_PlayerInput);
 export function GetUserMouseCoordinates(InputClass){
             const BoardSize = 64;
             let MouseRawCoordinatesObjects = new Object();
@@ -38,7 +35,6 @@ export function GetUserMouseCoordinates(InputClass){
                 InputClass.CurrentBoardTile = BoardTile;
             });
         }
-    _PlayerInput.AddEventFunction("mousemove",SetIsUserMouseDown,_PlayerInput);
 export function SetIsUserMouseDown(InputClass){
         let MouseDownEventName = "mousedown";
         let MouseUpEventName = "mouseup";
