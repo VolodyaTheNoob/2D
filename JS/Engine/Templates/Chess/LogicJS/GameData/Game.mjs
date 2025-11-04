@@ -3,14 +3,32 @@ import * as LOCALCONST from "./LocalConstants.mjs"
 import * as RenderFunctions from "./GameRender.mjs";
 import * as GameLogic from "./GameLogic.mjs";
 
+class Board{
+    constructor(_ChessBoardTiles,_ChessBoardObjects){
+        this.BoardTileMap = _ChessBoardTiles;
+        this.ObjectsTileMap = _ChessBoardObjects;
+        this.PrevState = {};
+    }
+    async Push(PosY,PosX,Object){
+        this.PrevState[PosY + " " + PosX] =  this.ObjectsTileMap.GetTileByIndex(PosY,PosX);
+        this.ObjectsTileMap.SetTileByIndex(PosY,PosX,Object);
+    }
+    async Pop(PosY,PosX){
+        this.ObjectsTileMap.SetTileByIndex(PosY,PosX,this.PrevState[PosY + " " + PosX]);
+        delete this.PrevState[PosY + " " + PosX];
+    }
+    async Flush(){
+        this.PrevState = {};
+    }
+}
+
 export class Game{
     constructor(Player1,Player2,BackgroundTileMap, GameObjectsTileMap) {
         this.Player1 = Player1;
         this.Player2 = Player2;
-        this.BackgroundTileMap = BackgroundTileMap;
-        this.AllObjectsTileMap = GameObjectsTileMap;
-        this.BackgroundRender = new ENGINE.Render(this.BackgroundTileMap,RenderFunctions.RenderTileMap,undefined);
-        this.ObjectsRender = new ENGINE.Render(this.AllObjectsTileMap,RenderFunctions.SmartRender,this.BackgroundTileMap);
+        this.ChessBoard = new Board(BackgroundTileMap,GameObjectsTileMap);
+        this.BackgroundRender = new ENGINE.Render(this.ChessBoard.BoardTileMap,RenderFunctions.RenderTileMap,undefined);
+        this.ObjectsRender = new ENGINE.Render(this.ChessBoard.ObjectsTileMap,RenderFunctions.SmartRender,this.ChessBoard.BoardTileMap);
         this.Teams = [Player1.GameData.Team,Player2.GameData.Team];
         /*
             I guess if I will go further - I will add new abstractions here
@@ -18,18 +36,18 @@ export class Game{
         this.CurrentTeamMove = this.Teams[0];//ProcessPlayerMoveData
         this.CurrentPlayerMove = this.Player1;//ProcessPlayerMoveData
         this.CurrentPlayerFocusedTile = undefined;//ProcessPlayerClickData
-        this.LastMovedPiece; // for passant
+        this.LastMovedPiece = undefined; // for passant
         [this.LastMovedPiecePrevPosY,this.LastMovedPiecePrevPosX] = [undefined,undefined];
     }
     async Render(){
         ENGINE.CONST.MainSceneContext.clearRect(0, 0, ENGINE.CONST.MainSceneContext.width, ENGINE.CONST.MainSceneContext.height);
         this.BackgroundRender.Render();
         this.ObjectsRender.Render();
+        //Add dynamic visual
         if(this.CurrentPlayerFocusedTile !== undefined){
             await this.AddVisualToInput();
         }
     }
-
 
     async ProcessPlayerInput(){
         let IsPlayerMovePiece = await this.ProcessClick();
@@ -83,7 +101,7 @@ export class Game{
         let PrevTilePrevState = this.CurrentPlayerFocusedTile.Clone();
         let NewTilePrevState = await this.GetClickedTile(ClickedY,ClickedX);
         if(NewTilePrevState !== undefined){
-            NewTilePrevState = NewTilePrevState.Clone();
+            NewTilePrevState = NewTilePrevState;
         }
         //Check for special events
         if(this.CurrentPlayerFocusedTile.Type === "King" || this.CurrentPlayerFocusedTile.Type === "Pawn"){
@@ -99,47 +117,41 @@ export class Game{
         }
     }
     async PieceMove(PrevTilePrevState,NewTilePrevState,ClickedY,ClickedX) {
-        this.AllObjectsTileMap.SetTileByIndex(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX,undefined);
-        this.AllObjectsTileMap.SetTileByIndex(ClickedY,ClickedX,this.CurrentPlayerFocusedTile);
+        const ChessBoard = this.ChessBoard;
+        await ChessBoard.Push(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX,undefined);
+        await ChessBoard.Push(ClickedY,ClickedX,this.CurrentPlayerFocusedTile);
         await this.CurrentPlayerFocusedTile.Place(ClickedY,ClickedX);
         if((await GameLogic.IsKingAttacked(this.CurrentPlayerFocusedTile.Team)) === true){
-            this.AllObjectsTileMap.SetTileByIndex(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX,this.CurrentPlayerFocusedTile);
+            await ChessBoard.Pop(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX);
             await this.CurrentPlayerFocusedTile.Place(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX);
-            if(NewTilePrevState !== undefined){
-                this.AllObjectsTileMap.SetTileByIndex(ClickedY,ClickedX,NewTilePrevState.Clone());
-            }
-            this.AllObjectsTileMap.SetTileByIndex(ClickedY,ClickedX,NewTilePrevState);
+            await ChessBoard.Pop(ClickedY,ClickedX);
         }else{
-            this.LastMovedPiece = this.CurrentPlayerFocusedTile; // Saving Last Moved Piece
-            [this.LastMovedPiecePrevPosY,this.LastMovedPiecePrevPosX] = [PrevTilePrevState.PositionY,PrevTilePrevState.PositionX];
+            await this.SaveLastMovedPieceData(this.CurrentPlayerFocusedTile,PrevTilePrevState.PositionY,PrevTilePrevState.PositionX);
             await this.ChangeCurrentTeamMove();
         }
+    }
+    async SaveLastMovedPieceData(Piece,PieceY,PieceX){
+        this.LastMovedPiece = Piece; // Saving Last Moved Piece
+        [this.LastMovedPiecePrevPosY,this.LastMovedPiecePrevPosX] = [PieceY,PieceX];
     }
     async ProcessPawnMove(ClickedY,ClickedX){
         if(await this.CurrentPlayerFocusedTile.IsCanMove(ClickedY,ClickedX) === true){
             let PrevTilePrevState = this.CurrentPlayerFocusedTile.Clone();
             let NewTilePrevState = await this.GetClickedTile(ClickedY,ClickedX);
-            if(NewTilePrevState !== undefined){
-                NewTilePrevState = NewTilePrevState.Clone();
-            }
             if(await this.CurrentPlayerFocusedTile.IsPassant(ClickedY,ClickedX) === true){
                 //Passant
-                console.log(this.CurrentPlayerFocusedTile);
                 NewTilePrevState = this.LastMovedPiece
-                console.log(NewTilePrevState);
-                console.log([this.LastMovedPiecePrevPosY,this.LastMovedPiecePrevPosX]);
-                this.AllObjectsTileMap.SetTileByIndex(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX,undefined);
-                this.AllObjectsTileMap.SetTileByIndex(NewTilePrevState.PositionY,NewTilePrevState.PositionX,undefined);
-                this.AllObjectsTileMap.SetTileByIndex(ClickedY,ClickedX,this.CurrentPlayerFocusedTile);
+                await this.ChessBoard.Push(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX,undefined);
+                await this.ChessBoard.Push(NewTilePrevState.PositionY,NewTilePrevState.PositionX,undefined);
+                await this.ChessBoard.Push(ClickedY,ClickedX,this.CurrentPlayerFocusedTile);
                 await this.CurrentPlayerFocusedTile.Place(ClickedY,ClickedX);
                 if((await GameLogic.IsKingAttacked(this.CurrentPlayerFocusedTile.Team)) === true){
-                    this.AllObjectsTileMap.SetTileByIndex(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX,this.CurrentPlayerFocusedTile);
+                    await this.ChessBoard.Pop(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX);
                     await this.CurrentPlayerFocusedTile.Place(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX);
-                    this.AllObjectsTileMap.SetTileByIndex(NewTilePrevState.PositionY,NewTilePrevState.PositionX,NewTilePrevState);
-                    this.AllObjectsTileMap.SetTileByIndex(ClickedY,ClickedX,undefined);
+                    await this.ChessBoard.Pop(NewTilePrevState.PositionY,NewTilePrevState.PositionX);
+                    await this.ChessBoard.Pop(ClickedY,ClickedX);
                 }else{
-                    this.LastMovedPiece = this.CurrentPlayerFocusedTile; // Saving Last Moved Piece
-                    [this.LastMovedPiecePrevPosY,this.LastMovedPiecePrevPosX] = [PrevTilePrevState.PositionY,PrevTilePrevState.PositionX]; //Saving LAST Moved Piece Prev Pos
+                    await this.SaveLastMovedPieceData(this.CurrentPlayerFocusedTile,PrevTilePrevState.PositionY,PrevTilePrevState.PositionX);
                     await this.ChangeCurrentTeamMove();
                 }
             }else{
@@ -150,7 +162,7 @@ export class Game{
     }
 
     async GetClickedTile(PosY,PosX){
-        return this.AllObjectsTileMap.GetTileByIndex(PosY,PosX);
+        return this.ChessBoard.ObjectsTileMap.GetTileByIndex(PosY,PosX);
     }
 
 
@@ -163,6 +175,7 @@ export class Game{
             this.CurrentPlayerMove = this.Player1;
         }
         this.CurrentPlayerFocusedTile = undefined;
+        this.ChessBoard.Flush();
     }
     //GameProcessingSpecificPiecesMoves
     //KingMoveProcess
@@ -173,8 +186,7 @@ export class Game{
             //Roquete
             if(await this.CurrentPlayerFocusedTile.IsCanRoquete(ClickedY,ClickedX) === true){
                 if(await this.ProcessKingRoquete(ClickedY,ClickedX) === true){
-                    this.LastMovedPiece = this.CurrentPlayerFocusedTile.Clone(); // Saving Last Moved Piece
-                    [this.LastMovedPiecePrevPosY,this.LastMovedPiecePrevPosX] = [PrevTilePrevState.PositionY,PrevTilePrevState.PositionX]; //Saving LAST Moved Piece Prev Pos
+                    await this.SaveLastMovedPieceData(this.CurrentPlayerFocusedTile,PrevTilePrevState.PositionY,PrevTilePrevState.PositionX);
                     await this.ChangeCurrentTeamMove();
                 }
             }else{
@@ -201,19 +213,19 @@ export class Game{
                     if(OffsetX > 0){
                         //QueeSide
                         this.CurrentPlayerFocusedTile.Place(KingPositionY,PosX);
-                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,PosX,this.CurrentPlayerFocusedTile);
+                        await this.ChessBoard.Push(KingPositionY,PosX,this.CurrentPlayerFocusedTile);
                         Rook.Place(KingPositionY,PosX+1)
-                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,PosX+1,Rook);
-                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,KingPositionX,undefined);
-                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,0,undefined);
+                        await this.ChessBoard.Push(KingPositionY,PosX+1,Rook);
+                        await this.ChessBoard.Push(KingPositionY,KingPositionX,undefined);
+                        await this.ChessBoard.Push(KingPositionY,0,undefined);
                     }else{
                         //KingSide
                         this.CurrentPlayerFocusedTile.Place(KingPositionY,PosX);
-                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,PosX,this.CurrentPlayerFocusedTile);
+                        await this.ChessBoard.Push(KingPositionY,PosX,this.CurrentPlayerFocusedTile);
                         Rook.Place(KingPositionY,PosX-1)
-                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,PosX-1,Rook);
-                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,KingPositionX,undefined);
-                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,7,undefined);
+                        await this.ChessBoard.Push(KingPositionY,PosX-1,Rook);
+                        await this.ChessBoard.Push(KingPositionY,KingPositionX,undefined);
+                        await this.ChessBoard.Push(KingPositionY,7,undefined);
                     }
                     return true;
                 }

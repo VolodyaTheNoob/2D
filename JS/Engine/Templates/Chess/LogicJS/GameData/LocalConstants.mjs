@@ -226,8 +226,23 @@ export async function LoadChessTextures(){
 
 //Setting up ChessPieces
 export async function CreateChessPieces(){
-    Player2Objects = [BlackPawn.Clone(1,0),BlackPawn.Clone(1,1),BlackPawn.Clone(1,2),BlackPawn.Clone(1,3),BlackPawn.Clone(1,4),BlackPawn.Clone(1,5),BlackPawn.Clone(1,6),BlackPawn.Clone(1,7),
-        BlackRook.Clone(0,0),BlackKnight.Clone(0,1),BlackBishop.Clone(0,2),BlackQueen.Clone(0,3),BlackKing.Clone(0,4),BlackBishop.Clone(0,5),BlackKnight.Clone(0,6),BlackRook.Clone(0,7)];
+    Player2Objects = {
+        0: BlackPawn.Clone(1,0),
+        1: BlackPawn.Clone(1,1),
+        2: BlackPawn.Clone(1,2),
+        3: BlackPawn.Clone(1,3),
+        4: BlackPawn.Clone(1,4),
+        5: BlackPawn.Clone(1,5),
+        6: BlackPawn.Clone(1,6),
+        7: BlackPawn.Clone(1,7),
+        8: BlackRook.Clone(0,0),
+        9: BlackKnight.Clone(0,1),
+        10: BlackBishop.Clone(0,2),
+        11: BlackQueen.Clone(0,3),
+        12: BlackKing.Clone(0,4),
+        13: BlackBishop.Clone(0,5),
+        14: BlackKnight.Clone(0,6),
+        15: BlackRook.Clone(0,7)};
     Player1Objects = [WhiteRook.Clone(7,0),WhiteKnight.Clone(7,1),WhiteBishop.Clone(7,2),WhiteQueen.Clone(7,3),WhiteKing.Clone(7,4),WhiteBishop.Clone(7,5),WhiteKnight.Clone(7,6),WhiteRook.Clone(7,7),
         WhitePawn.Clone(6,0),WhitePawn.Clone(6,1),WhitePawn.Clone(6,2),WhitePawn.Clone(6,3),WhitePawn.Clone(6,4),WhitePawn.Clone(6,5),WhitePawn.Clone(6,6),WhitePawn.Clone(6,7)];
     GamePieces = [
