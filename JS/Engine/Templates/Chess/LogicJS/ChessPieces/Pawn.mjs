@@ -11,7 +11,7 @@ export class Pawn extends ChessPiece{
         return new Pawn(this.Texture,NewPosY,NewPosX,NewCoordY,NewCoordX,this.Team,this.Type);
     }
     async Move(NewPosY,NewPosX){
-        if(await this.IsCanMove(NewPosY,NewPosX)){
+        if(await this.IsCanMove(NewPosY,NewPosX) === true){
             this.PositionX = NewPosX;
             this.PositionY = NewPosY;
             this.CoordinatesX = this.GetSizeX() * NewPosX;
@@ -23,6 +23,7 @@ export class Pawn extends ChessPiece{
     }
     async Place(PosY,PosX){
         super.Place(PosY,PosX);
+        this.AlreadyMoved = true;
     }
     async IsCanMove(NewPosY,NewPosX){
         let NewTileData = LOCALCONST.GamePiecesTileMap.GetTiles()[NewPosY][NewPosX];
@@ -55,11 +56,34 @@ export class Pawn extends ChessPiece{
                                 return true;
                             }
                         }
-                    }
+                    }else{
+                        //passant
+                        return await this.IsPassant(NewPosY,NewPosX);
+                    }   
                 }
             }
         }
     return false;
+    }
+
+    async IsPassant(PosY,PosX) {
+        //passant
+        if(LOCALCONST.Chess.LastMovedPiece !== undefined){
+            if(LOCALCONST.Chess.LastMovedPiece.Type === "Pawn"){
+                if(LOCALCONST.Chess.LastMovedPiece.Team !== this.Team){
+                    let OffsetY = LOCALCONST.Chess.LastMovedPiece.PositionY - LOCALCONST.Chess.LastMovedPiecePrevPosY;
+                    //let OffsetX = LOCALCONST.Chess.LastMovedPiece.PositionX - LOCALCONST.Chess.LastMovedPiecePrevPosX;
+                    if(Math.abs(OffsetY) === 2){
+                        if(Math.abs(LOCALCONST.Chess.LastMovedPiecePrevPosY - PosY) === 1){
+                            if(Math.abs(this.PositionX - PosX) == 1){
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
     async IsAttacking(PosY,PosX){
         let OffsetY = this.PositionY - PosY;

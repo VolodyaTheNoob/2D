@@ -5,11 +5,24 @@ export async function GetClickedCheesPiece(ClickedBoardTile){
     return LOCALCONST.GamePiecesTileMap.GetTiles()[ClickedBoardTile["Y"]][ClickedBoardTile["X"]];
 }
 
+export async function GetClickedTile(PosY,Posx){
+    let Tiles = LOCALCONST.GamePiecesTileMap.GetTiles();
+    return Tiles[PosY][Posx];
+}
+
+export async function IsTileEmpty(PosY,PosX) {
+    let Tile = LOCALCONST.GamePiecesTileMap.GetTiles();
+    Tile = Tile[PosY][PosX];
+    if(Tile === undefined){
+        return true;
+    }
+    return false;
+}
+
 export async function IsTileAttacked(PosY,PosX,AttackingTeam) {
     let AttackingPiaces = await GetPiacesByTeam(AttackingTeam);
     for(let x = 0; x < AttackingPiaces.length;x++){
         if(await AttackingPiaces[x].IsAttacking(PosY,PosX) === true){
-            console.log(AttackingPiaces[x]);
             return true;
         }
     }

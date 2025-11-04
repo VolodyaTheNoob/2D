@@ -16,12 +16,14 @@ export class Rook extends ChessPiece{
             this.PositionY = NewPosY;
             this.CoordinatesX = this.GetSizeX() * NewPosX;
             this.CoordinatesY = this.GetSizeY() * NewPosY;
+            this.AlreadyMoved = true;
             return true;
         }   
         return false;
     }
     async Place(PosY,PosX){
         super.Place(PosY,PosX);
+        this.AlreadyMoved = true;
     }
     async IsCanMove(NewPosY,NewPosX){
         let NewTileData = LOCALCONST.GamePiecesTileMap.GetTiles()[NewPosY][NewPosX];
@@ -91,7 +93,7 @@ export class Rook extends ChessPiece{
                     }
                     OffsetY = 0;
                 }
-                if(await IsLineEmpty(this.PositionY,this.PositionX,NewPosY + (OffsetY * -1),NewPosX + (OffsetX * -1),OffsetY,OffsetX)){
+                if(await IsLineEmpty(this.PositionY,this.PositionX,PosY + (OffsetY * -1),PosX + (OffsetX * -1),OffsetY,OffsetX)){
                     return true;
                 }
             }else{

@@ -18,6 +18,8 @@ export class Game{
         this.CurrentTeamMove = this.Teams[0];//ProcessPlayerMoveData
         this.CurrentPlayerMove = this.Player1;//ProcessPlayerMoveData
         this.CurrentPlayerFocusedTile = undefined;//ProcessPlayerClickData
+        this.LastMovedPiece; // for passant
+        [this.LastMovedPiecePrevPosY,this.LastMovedPiecePrevPosX] = [undefined,undefined];
     }
     async Render(){
         ENGINE.CONST.MainSceneContext.clearRect(0, 0, ENGINE.CONST.MainSceneContext.width, ENGINE.CONST.MainSceneContext.height);
@@ -69,6 +71,20 @@ export class Game{
         if(NewTilePrevState !== undefined){
             NewTilePrevState = NewTilePrevState.Clone();
         }
+        //Check for special events
+        if(this.CurrentPlayerFocusedTile.Type === "King" || this.CurrentPlayerFocusedTile.Type === "Pawn"){
+            if(this.CurrentPlayerFocusedTile.Type === "Pawn"){
+                 await this.ProcessPawnMove(ClickedY,ClickedX);
+            }else{
+                //King events - roquete
+                await this.ProcessKingMove(ClickedY,ClickedX);
+            }
+        }else{
+            //Default move
+            await this.PieceMove(PrevTilePrevState,NewTilePrevState,ClickedY,ClickedX);
+        }
+    }
+    async PieceMove(PrevTilePrevState,NewTilePrevState,ClickedY,ClickedX) {
         this.AllObjectsTileMap.SetTileByIndex(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX,undefined);
         this.AllObjectsTileMap.SetTileByIndex(ClickedY,ClickedX,this.CurrentPlayerFocusedTile);
         await this.CurrentPlayerFocusedTile.Place(ClickedY,ClickedX);
@@ -80,7 +96,42 @@ export class Game{
             }
             this.AllObjectsTileMap.SetTileByIndex(ClickedY,ClickedX,NewTilePrevState);
         }else{
+            this.LastMovedPiece = this.CurrentPlayerFocusedTile; // Saving Last Moved Piece
+            [this.LastMovedPiecePrevPosY,this.LastMovedPiecePrevPosX] = [PrevTilePrevState.PositionY,PrevTilePrevState.PositionX];
             await this.ChangeCurrentTeamMove();
+        }
+    }
+    async ProcessPawnMove(ClickedY,ClickedX){
+        if(await this.CurrentPlayerFocusedTile.IsCanMove(ClickedY,ClickedX) === true){
+            let PrevTilePrevState = this.CurrentPlayerFocusedTile.Clone();
+            let NewTilePrevState = await this.GetClickedTile(ClickedY,ClickedX);
+            if(NewTilePrevState !== undefined){
+                NewTilePrevState = NewTilePrevState.Clone();
+            }
+            if(await this.CurrentPlayerFocusedTile.IsPassant(ClickedY,ClickedX) === true){
+                //Passant
+                console.log(this.CurrentPlayerFocusedTile);
+                NewTilePrevState = this.LastMovedPiece
+                console.log(NewTilePrevState);
+                console.log([this.LastMovedPiecePrevPosY,this.LastMovedPiecePrevPosX]);
+                this.AllObjectsTileMap.SetTileByIndex(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX,undefined);
+                this.AllObjectsTileMap.SetTileByIndex(NewTilePrevState.PositionY,NewTilePrevState.PositionX,undefined);
+                this.AllObjectsTileMap.SetTileByIndex(ClickedY,ClickedX,this.CurrentPlayerFocusedTile);
+                await this.CurrentPlayerFocusedTile.Place(ClickedY,ClickedX);
+                if((await GameLogic.IsKingAttacked(this.CurrentPlayerFocusedTile.Team)) === true){
+                    this.AllObjectsTileMap.SetTileByIndex(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX,this.CurrentPlayerFocusedTile);
+                    await this.CurrentPlayerFocusedTile.Place(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX);
+                    this.AllObjectsTileMap.SetTileByIndex(NewTilePrevState.PositionY,NewTilePrevState.PositionX,NewTilePrevState);
+                    this.AllObjectsTileMap.SetTileByIndex(ClickedY,ClickedX,undefined);
+                }else{
+                    this.LastMovedPiece = this.CurrentPlayerFocusedTile; // Saving Last Moved Piece
+                    [this.LastMovedPiecePrevPosY,this.LastMovedPiecePrevPosX] = [PrevTilePrevState.PositionY,PrevTilePrevState.PositionX]; //Saving LAST Moved Piece Prev Pos
+                    await this.ChangeCurrentTeamMove();
+                }
+            }else{
+                //Default move
+                await this.PieceMove(PrevTilePrevState,NewTilePrevState,ClickedY,ClickedX);
+            }
         }
     }
 
@@ -99,5 +150,61 @@ export class Game{
         }
         this.CurrentPlayerFocusedTile = undefined;
     }
-
+    //GameProcessingSpecificPiecesMoves
+    //KingMoveProcess
+    async ProcessKingMove(ClickedY,ClickedX){
+        if(await this.CurrentPlayerFocusedTile.IsCanMove(ClickedY,ClickedX) === true){
+            let PrevTilePrevState = this.CurrentPlayerFocusedTile.Clone();
+            let NewTilePrevState = await this.GetClickedTile(ClickedY,ClickedX);
+            //Roquete
+            if(await this.CurrentPlayerFocusedTile.IsCanRoquete(ClickedY,ClickedX) === true){
+                if(await this.ProcessKingRoquete(ClickedY,ClickedX) === true){
+                    this.LastMovedPiece = this.CurrentPlayerFocusedTile.Clone(); // Saving Last Moved Piece
+                    [this.LastMovedPiecePrevPosY,this.LastMovedPiecePrevPosX] = [PrevTilePrevState.PositionY,PrevTilePrevState.PositionX]; //Saving LAST Moved Piece Prev Pos
+                    await this.ChangeCurrentTeamMove();
+                }
+            }else{
+                //Default move
+                await this.PieceMove(PrevTilePrevState,NewTilePrevState,ClickedY,ClickedX);
+            }
+        }
+    }
+    async ProcessKingRoquete(PosY,PosX){
+        let [KingPositionY,KingPositionX] = [this.CurrentPlayerFocusedTile.PositionY,this.CurrentPlayerFocusedTile.PositionX];
+        let OffsetX = KingPositionX - PosX;
+        let Rook;
+        //Getting Rook
+        if(OffsetX > 0){
+            //QueeSide
+            Rook = await this.GetClickedTile(KingPositionY,0);
+        }else{
+            //KingSide
+            Rook = await this.GetClickedTile(KingPositionY,7);
+        }
+        if(Rook !== undefined){
+            if(Rook.Team === this.CurrentTeamMove){
+                if(Rook.AlreadyMoved === false){
+                    if(OffsetX > 0){
+                        //QueeSide
+                        this.CurrentPlayerFocusedTile.Place(KingPositionY,PosX);
+                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,PosX,this.CurrentPlayerFocusedTile);
+                        Rook.Place(KingPositionY,PosX+1)
+                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,PosX+1,Rook);
+                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,KingPositionX,undefined);
+                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,0,undefined);
+                    }else{
+                        //KingSide
+                        this.CurrentPlayerFocusedTile.Place(KingPositionY,PosX);
+                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,PosX,this.CurrentPlayerFocusedTile);
+                        Rook.Place(KingPositionY,PosX-1)
+                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,PosX-1,Rook);
+                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,KingPositionX,undefined);
+                        this.AllObjectsTileMap.SetTileByIndex(KingPositionY,7,undefined);
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

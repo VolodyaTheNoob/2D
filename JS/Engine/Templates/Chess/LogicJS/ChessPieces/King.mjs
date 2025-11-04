@@ -1,7 +1,7 @@
 import * as LOCALCONST from "../GameData/LocalConstants.mjs";
 import { ChessPiece } from "./ChessPiece.mjs";
 import { IsLineEmpty } from "./ChessPiece.mjs";
-import { IsTileAttacked } from "../GameData/GameLogic.mjs";
+import { IsTileAttacked, IsTileEmpty } from "../GameData/GameLogic.mjs";
 
 export class King extends ChessPiece{
     constructor(SpriteTexture = undefined,PosY = undefined,PosX = undefined,CoordY = undefined,CoordX = undefined,_Team = undefined,_Type = undefined){
@@ -12,18 +12,17 @@ export class King extends ChessPiece{
         return new King(this.Texture,NewPosY,NewPosX,NewCoordY,NewCoordX,this.Team,this.Type);
     }
     async Move(NewPosY,NewPosX){
-        if(await this.IsCanMove(NewPosY,NewPosX)){
+        if(await this.IsCanMove(NewPosY,NewPosX) === true){
             this.PositionX = NewPosX;
             this.PositionY = NewPosY;
             this.CoordinatesX = this.GetSizeX() * NewPosX;
             this.CoordinatesY = this.GetSizeY() * NewPosY;
             this.AlreadyMoved = true;
-            return true;
         }
-        return false;
     }
     async Place(PosY,PosX){
         super.Place(PosY,PosX);
+        this.AlreadyMoved = true;
     }
     async IsCanMove(NewPosY,NewPosX){
         let NewTileData = LOCALCONST.GamePiecesTileMap.GetTiles()[NewPosY][NewPosX];
@@ -37,7 +36,6 @@ export class King extends ChessPiece{
         }
         if((Math.abs(OffsetY) <= 1) && (Math.abs(OffsetX) <= 1)){
             if(OffsetY != 0 || OffsetX != 0){
-                console.log(await IsTileAttacked(NewPosY,NewPosX,OtherTeam));
                 if(await IsTileAttacked(NewPosY,NewPosX,OtherTeam) == false){
                     if(NewTileData === undefined){
                         return true;
@@ -48,7 +46,41 @@ export class King extends ChessPiece{
                     }
                 }
             }
-        }  
+        }else{
+            if(Math.abs(OffsetX) == 2 && Math.abs(OffsetY) == 0){
+                return await this.IsCanRoquete(NewPosY,NewPosX);
+            }
+        }
+        return false;
+    }
+    async IsCanRoquete(NewPosY,NewPosX){
+        let OtherTeam = 0;
+        if(this.Team == 0){
+            OtherTeam = 1;
+        }else{
+            OtherTeam = 0;
+        }
+        let OffsetY = this.PositionY - NewPosY;
+        let OffsetX = this.PositionX - NewPosX;
+        if(this.AlreadyMoved === false){
+            if(Math.abs(OffsetX) == 2 && Math.abs(OffsetY) == 0){
+                if(OffsetX == 2){
+                    //Queen side roquet
+                    if(await IsTileAttacked(NewPosY,NewPosX-1,OtherTeam) === false && await IsTileAttacked(NewPosY,NewPosX-2,OtherTeam) === false){
+                        if((await IsTileEmpty(NewPosY,NewPosX-1) === true) && (await IsTileEmpty(NewPosY,NewPosX) === true) && (await IsTileEmpty(NewPosY,NewPosX+1) === true)){
+                            return true;
+                        }
+                    }
+                }else{
+                    //King side roquet 
+                    if(await IsTileAttacked(NewPosY,NewPosX+1,OtherTeam) === false && await IsTileAttacked(NewPosY,NewPosX+2,OtherTeam) === false){
+                        if((await IsTileEmpty(NewPosY,NewPosX-1) === true) && (await IsTileEmpty(NewPosY,NewPosX) === true)){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
         return false;
     }
     async IsAttacking(PosY,PosX){
