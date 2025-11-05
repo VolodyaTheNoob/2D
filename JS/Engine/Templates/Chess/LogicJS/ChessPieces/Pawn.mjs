@@ -29,18 +29,24 @@ export class Pawn extends ChessPiece{
         let NewTileData = LOCALCONST.GamePiecesTileMap.GetTiles()[NewPosY][NewPosX];
         let OffsetY = this.PositionY - NewPosY;
         let OffsetX = this.PositionX - NewPosX;
+        if(this.Team === LOCALCONST.Team2){
+            if(NewPosY < this.PositionY){
+                return false;
+            }
+        }
+        if(this.Team === LOCALCONST.Team1){
+            if(NewPosY > this.PositionY){
+                return false;
+            }
+        }
         if((Math.abs(OffsetY) == 1 || Math.abs(OffsetY) == 2) && (OffsetX == 0 || Math.abs(OffsetX) == 1)){
             if(Math.abs(OffsetY) == 2){
                 if(OffsetX == 0){
                     if(this.AlreadyMoved == false){
-                        if(NewTileData !== undefined){
-                            if(NewTileData.Team !== this.Team){
-                                if(NewTileData.Type != "King"){
-                                    return true;
-                                }
-                            }
-                        }else{
+                        if(NewTileData === undefined){
                             return true;
+                        }else{
+                            return false;
                         }
                     }
                 }

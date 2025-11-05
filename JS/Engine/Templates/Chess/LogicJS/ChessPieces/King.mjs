@@ -1,7 +1,7 @@
 import * as LOCALCONST from "../GameData/LocalConstants.mjs";
 import { ChessPiece } from "./ChessPiece.mjs";
 import { IsLineEmpty } from "./ChessPiece.mjs";
-import { IsTileAttacked, IsTileEmpty } from "../GameData/GameLogic.mjs";
+import { IsTileAttacked, IsTileEmpty, GetClickedTile} from "../GameData/GameLogic.mjs";
 
 export class King extends ChessPiece{
     constructor(SpriteTexture = undefined,PosY = undefined,PosX = undefined,CoordY = undefined,CoordX = undefined,_Team = undefined,_Type = undefined){
@@ -37,7 +37,6 @@ export class King extends ChessPiece{
         if((Math.abs(OffsetY) <= 1) && (Math.abs(OffsetX) <= 1)){
             if(OffsetY != 0 || OffsetX != 0){
                 if(await IsTileAttacked(NewPosY,NewPosX,OtherTeam) === false){
-                    console.log("True");
                     if(NewTileData === undefined){
                         return true;
                     }else{
@@ -65,15 +64,15 @@ export class King extends ChessPiece{
         let OffsetX = this.PositionX - NewPosX;
         let KingPositionY = this.PositionY;
         let KingPositionX = this.PositionX;
-        let RookOffsetX = KingPositionX - PosX;
+        let RookOffsetX = KingPositionX - NewPosX;
         let Rook;
         //Getting Rook
         if(RookOffsetX > 0){
             //QueeSide
-            Rook = await this.GetClickedTile(KingPositionY,0);
+            Rook = await GetClickedTile(KingPositionY,0);
         }else{
             //KingSide
-            Rook = await this.GetClickedTile(KingPositionY,7);
+            Rook = await GetClickedTile(KingPositionY,7);
         }
         if(this.AlreadyMoved === false){
             if(Math.abs(OffsetX) == 2 && Math.abs(OffsetY) == 0){

@@ -38,6 +38,10 @@ export class Game{
         this.CurrentPlayerFocusedTile = undefined;//ProcessPlayerClickData
         this.LastMovedPiece = undefined; // for passant
         [this.LastMovedPiecePrevPosY,this.LastMovedPiecePrevPosX] = [undefined,undefined];
+        this.GameEndedState = false;
+        this.PlayerWin = undefined;
+        this.PlayerLose = undefined;
+        this.Draw = undefined;
     }
     async Render(){
         ENGINE.CONST.MainSceneContext.clearRect(0, 0, ENGINE.CONST.MainSceneContext.width, ENGINE.CONST.MainSceneContext.height);
@@ -52,12 +56,25 @@ export class Game{
     async ProcessGame(){
         if(await this.IsGameEnded() === false){
             await this.ProcessPlayerInput();
+        }else{
+            
         }
     }
 
     async IsGameEnded(){
         let CountOfAviableMoves = await this.GetCountOfPlayerMoves();
         if(CountOfAviableMoves == 0){
+            if(await GameLogic.IsKingAttacked(this.CurrentTeamMove) === true){
+                let LosedTeam = this.CurrentTeamMove;
+                if(LosedTeam === 1){
+                    LosedTeam = "Black";
+                }else{
+                    LosedTeam = "White";
+                }
+                console.log(LosedTeam," - ", "Lose");
+            }else{
+                console.log("Draw");
+            }
             return true;
         }
         return false;
@@ -66,7 +83,15 @@ export class Game{
     async GetCountOfPlayerMoves(){
         let CountOfMoves = 0;
         let CurrentPlayerPieces = await this.GetPiecesByTeam(this.CurrentTeamMove);
-        
+        for(let i = 0; i < CurrentPlayerPieces.length;i++){
+            for(let y = 0;y < 8;y++){
+                for(let x =0; x < 8;x++){
+                    if(await this.LogicalProcessPieceMove(CurrentPlayerPieces[i],y,x) === true){
+                        CountOfMoves++;
+                    }
+                }
+            }
+        }
         return CountOfMoves;
     }
 
@@ -75,7 +100,7 @@ export class Game{
         let PiecesByTeam = new Array();
         for(let y = 0; y < LOCALCONST.ChessBoardSize;y++){
            for(let x = 0; x < LOCALCONST.ChessBoardSize;x++){ 
-                if(AllBoardPiaces[y][x] !== undefined){
+                if(AllBoardPieces[y][x] !== undefined){
                     if(AllBoardPieces[y][x].Team == Team){
                         PiecesByTeam.push(AllBoardPieces[y][x]);
                     }
@@ -134,11 +159,6 @@ export class Game{
     }
 
     async ProcessPieceMove(ClickedY,ClickedX){
-        let PrevTilePrevState = this.CurrentPlayerFocusedTile.Clone();
-        let NewTilePrevState = await this.GetClickedTile(ClickedY,ClickedX);
-        if(NewTilePrevState !== undefined){
-            NewTilePrevState = NewTilePrevState;
-        }
         //Check for special events
         if(this.CurrentPlayerFocusedTile.Type === "King" || this.CurrentPlayerFocusedTile.Type === "Pawn"){
             if(this.CurrentPlayerFocusedTile.Type === "Pawn"){
@@ -149,18 +169,18 @@ export class Game{
             }
         }else{
             //Default move
-            await this.PieceMove(PrevTilePrevState,NewTilePrevState,ClickedY,ClickedX);
+            await this.PieceMove(ClickedY,ClickedX);
         }
     }
     async LogicalProcessPieceMove(PieceToMove, ClickedY,ClickedX){
-        let PrevTilePrevState = PieceToMove.Clone();
+        let PrevTilePrevState = await PieceToMove.Clone();
         let NewTilePrevState = await this.GetClickedTile(ClickedY,ClickedX);
         if(NewTilePrevState !== undefined){
             NewTilePrevState = NewTilePrevState;
         }
-        //Check for special events
-        if(this.CurrentPlayerFocusedTile.Type === "King" || this.CurrentPlayerFocusedTile.Type === "Pawn"){
-            if(this.CurrentPlayerFocusedTile.Type === "Pawn"){
+        //Check for special PrevTilePrevState
+        if(PrevTilePrevState.Type === "King" || PrevTilePrevState.Type === "Pawn"){
+            if(PrevTilePrevState.Type === "Pawn"){
                  return await this.LogicalProcessPawnMove(PrevTilePrevState,ClickedY,ClickedX);
             }else{
                 //King events - roquete
@@ -171,7 +191,8 @@ export class Game{
             return await this.LogicalPieceMove(PrevTilePrevState,ClickedY,ClickedX);
         }
     }
-    async PieceMove(PrevTilePrevState,NewTilePrevState,ClickedY,ClickedX) {
+    async PieceMove(ClickedY,ClickedX) {
+        let PrevTilePrevState = this.CurrentPlayerFocusedTile.Clone();
         const ChessBoard = this.ChessBoard;
         await ChessBoard.Push(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX,undefined);
         await ChessBoard.Push(ClickedY,ClickedX,this.CurrentPlayerFocusedTile);
@@ -181,20 +202,21 @@ export class Game{
             await this.CurrentPlayerFocusedTile.Place(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX);
             await ChessBoard.Pop(ClickedY,ClickedX);
         }else{
-            await this.SaveLastMovedPieceData(this.CurrentPlayerFocusedTile,PrevTilePrevState.PositionY,PrevTilePrevState.PositionX);
+            await this.SaveLastMovedPieceData(this.CurrentPlayerFocusedTile,this.CurrentPlayerFocusedTile.PositionY,this.CurrentPlayerFocusedTile.PositionX);
             await this.ChangeCurrentTeamMove();
         }
     }
     async LogicalPieceMove(PrevTilePrevState,ClickedY,ClickedX) {
-        if(await this.CurrentPlayerFocusedTile.IsCanMove(ClickedY,ClickedX) === true){
+        let PrevTilePrevStateCopy = PrevTilePrevState.Clone();
+        if(await PrevTilePrevState.IsCanMove(ClickedY,ClickedX) === true){
             const ChessBoard = this.ChessBoard;
-            await ChessBoard.Push(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX,undefined);
-            await ChessBoard.Push(ClickedY,ClickedX,this.CurrentPlayerFocusedTile);
-            await this.CurrentPlayerFocusedTile.Place(ClickedY,ClickedX);
-            let State = await GameLogic.IsKingAttacked(this.CurrentPlayerFocusedTile.Team);
-            await ChessBoard.Pop(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX);
-            await this.CurrentPlayerFocusedTile.Place(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX);
+            await ChessBoard.Push(ClickedY,ClickedX,PrevTilePrevState);
+            await ChessBoard.Push(PrevTilePrevStateCopy.PositionY,PrevTilePrevStateCopy.PositionX,undefined);
+            await PrevTilePrevState.Place(ClickedY,ClickedX);
+            let State = await GameLogic.IsKingAttacked(PrevTilePrevState.Team);
+            await PrevTilePrevState.Place(PrevTilePrevStateCopy.PositionY,PrevTilePrevStateCopy.PositionX);
             await ChessBoard.Pop(ClickedY,ClickedX);
+            await ChessBoard.Pop(PrevTilePrevStateCopy.PositionY,PrevTilePrevStateCopy.PositionX);
             if(State === true){
                 return false;
             }else{
@@ -229,25 +251,25 @@ export class Game{
                 }
             }else{
                 //Default move
-                await this.PieceMove(PrevTilePrevState,NewTilePrevState,ClickedY,ClickedX);
+                await this.PieceMove(ClickedY,ClickedX);
             }
         }
     }
     
     async LogicalProcessPawnMove(PrevTilePrevState,ClickedY,ClickedX){
-        if(await this.CurrentPlayerFocusedTile.IsCanMove(ClickedY,ClickedX) === true){
-            PrevTilePrevState = this.CurrentPlayerFocusedTile.Clone();
+        let PrevTilePrevStateCopy = PrevTilePrevState.Clone();
+        if(await PrevTilePrevState.IsCanMove(ClickedY,ClickedX) === true){
             let NewTilePrevState = await this.GetClickedTile(ClickedY,ClickedX);
-            if(await this.CurrentPlayerFocusedTile.IsPassant(ClickedY,ClickedX) === true){
+            if(await PrevTilePrevState.IsPassant(ClickedY,ClickedX) === true){
                 //Passant
                 NewTilePrevState = this.LastMovedPiece
-                await this.ChessBoard.Push(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX,undefined);
+                await this.ChessBoard.Push(PrevTilePrevStateCopy.PositionY,PrevTilePrevStateCopy.PositionX,undefined);
                 await this.ChessBoard.Push(NewTilePrevState.PositionY,NewTilePrevState.PositionX,undefined);
-                await this.ChessBoard.Push(ClickedY,ClickedX,this.CurrentPlayerFocusedTile);
-                await this.CurrentPlayerFocusedTile.Place(ClickedY,ClickedX);
-                let State = await GameLogic.IsKingAttacked(this.CurrentPlayerFocusedTile.Team);
-                await this.ChessBoard.Pop(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX);
-                await this.CurrentPlayerFocusedTile.Place(PrevTilePrevState.PositionY,PrevTilePrevState.PositionX);
+                await this.ChessBoard.Push(ClickedY,ClickedX,PrevTilePrevState);
+                await PrevTilePrevState.Place(ClickedY,ClickedX);
+                let State = await GameLogic.IsKingAttacked(PrevTilePrevState.Team);
+                await this.ChessBoard.Pop(PrevTilePrevStateCopy.PositionY,PrevTilePrevStateCopy.PositionX);
+                await PrevTilePrevState.Place(PrevTilePrevStateCopy.PositionY,PrevTilePrevStateCopy.PositionX);
                 await this.ChessBoard.Pop(NewTilePrevState.PositionY,NewTilePrevState.PositionX);
                 await this.ChessBoard.Pop(ClickedY,ClickedX);
                 if( State === true){
@@ -297,16 +319,15 @@ export class Game{
             }
         }
     }
-        async LogicalProcessKingMove(PrevTilePrevState,ClickedY,ClickedX){
-        if(await this.CurrentPlayerFocusedTile.IsCanMove(ClickedY,ClickedX) === true){
-            PrevTilePrevState = this.CurrentPlayerFocusedTile.Clone();
-            let NewTilePrevState = await this.GetClickedTile(ClickedY,ClickedX);
+        async LogicalProcessKingMove(PrevTilePrevStateCopy,ClickedY,ClickedX){
+        let PrevTilePrevState = PrevTilePrevStateCopy.Clone();
+        if(await PrevTilePrevState.IsCanMove(ClickedY,ClickedX) === true){
             //Roquete
-            if(await this.CurrentPlayerFocusedTile.IsCanRoquete(ClickedY,ClickedX) === true){
+            if(await PrevTilePrevState.IsCanRoquete(ClickedY,ClickedX) === true){
                 return true;
             }else{
                 //Default move
-                return await this.LogicalPieceMove(PrevTilePrevState,ClickedY,ClickedX);
+                return await this.LogicalPieceMove(PrevTilePrevStateCopy,ClickedY,ClickedX);
             }
         }
         return false;
