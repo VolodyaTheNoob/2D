@@ -63,20 +63,44 @@ export class King extends ChessPiece{
         }
         let OffsetY = this.PositionY - NewPosY;
         let OffsetX = this.PositionX - NewPosX;
+        let KingPositionY = this.PositionY;
+        let KingPositionX = this.PositionX;
+        let RookOffsetX = KingPositionX - PosX;
+        let Rook;
+        //Getting Rook
+        if(RookOffsetX > 0){
+            //QueeSide
+            Rook = await this.GetClickedTile(KingPositionY,0);
+        }else{
+            //KingSide
+            Rook = await this.GetClickedTile(KingPositionY,7);
+        }
         if(this.AlreadyMoved === false){
             if(Math.abs(OffsetX) == 2 && Math.abs(OffsetY) == 0){
                 if(OffsetX == 2){
                     //Queen side roquet
                     if(await IsTileAttacked(NewPosY,NewPosX-1,OtherTeam) === false && await IsTileAttacked(NewPosY,NewPosX-2,OtherTeam) === false){
-                        if((await IsTileEmpty(NewPosY,NewPosX-1) === true) && (await IsTileEmpty(NewPosY,NewPosX) === true) && (await IsTileEmpty(NewPosY,NewPosX+1) === true)){
-                            return true;
+                        if((await IsTileEmpty(NewPosY,NewPosX-1) === true) && (await IsTileEmpty(NewPosY,NewPosX) === true) && (await IsTileEmpty(NewPosY,NewPosX+1) === true)){ 
+                            if(Rook !== undefined){
+                                if(Rook.Team === this.CurrentTeamMove){
+                                    if(Rook.AlreadyMoved === false){
+                                         return true;
+                                    }
+                                }
+                            }
                         }
                     }
                 }else{
                     //King side roquet 
                     if(await IsTileAttacked(NewPosY,NewPosX+1,OtherTeam) === false && await IsTileAttacked(NewPosY,NewPosX+2,OtherTeam) === false){
                         if((await IsTileEmpty(NewPosY,NewPosX-1) === true) && (await IsTileEmpty(NewPosY,NewPosX) === true)){
-                            return true;
+                            if(Rook !== undefined){
+                                if(Rook.Team === this.CurrentTeamMove){
+                                    if(Rook.AlreadyMoved === false){
+                                         return true;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
