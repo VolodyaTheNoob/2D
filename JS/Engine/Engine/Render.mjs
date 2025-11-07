@@ -5,9 +5,9 @@ export class Render{
         this.RenderArgs = RenderArgs;
         this.IsRendering = true;
     }
-    Render(){
+    async Render(){
         if(this.IsRendering){
-            this.RenderFunction(this._Objects,this.RenderArgs);
+           await this.RenderFunction(this._Objects,this.RenderArgs);
         }
     }
     AttachRenderFunction(FuncToAttach, FuncArgs){
