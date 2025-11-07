@@ -56,8 +56,6 @@ export class Game{
     async ProcessGame(){
         if(await this.IsGameEnded() === false){
             await this.ProcessPlayerInput();
-        }else{
-            
         }
     }
 
