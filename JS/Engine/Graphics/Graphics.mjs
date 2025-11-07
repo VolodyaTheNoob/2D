@@ -1,11 +1,12 @@
 import { RGBA as _RGBA } from "./RGBA.mjs";
-import { ColorImage as _ColorImage, DeffaultImage as _DeffaultImage, LoadImage as _LoadImage} from "./Image.mjs";
+import {StoredImage as _StoredImage} from "./Image.mjs";
+import {ColorImageData as _ColorImageData, StoredImageData as _StoredImageData} from "./ImageData.mjs"
 import { Texture as _Texture } from "./Texture.mjs";
 import { Sprite as _Sprite } from "./Sprite.mjs";
 
 export let RGBA = _RGBA;
-export let ColorImage = _ColorImage;
-export let DeffaultImage = _DeffaultImage;
-export let LoadImage = _LoadImage;
+export let StoredImage = _StoredImage;
+export let ColorImageData = _ColorImageData;
+export let StoredImageData = _StoredImageData;
 export let Texture = _Texture;
 export let Sprite = _Sprite;

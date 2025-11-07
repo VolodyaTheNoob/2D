@@ -1,153 +1,55 @@
 import { RGBA } from "./RGBA.mjs";
 import { MainSceneBackBufferID,MainSceneBackBufferDOM,MainSceneBackBufferContext} from "../Constants.mjs";
 
-export class ColorImage{
-    constructor(_RGBA = undefined,_SizeY = undefined,_SizeX = undefined,_BackBufferCotext = MainSceneBackBufferContext){
-        this.RGBA = _RGBA; //RGBA Class
-        this.SizeX = _SizeX;
-        this.SizeY = _SizeY;
-        this.Size = this.SizeX * this.SizeY;
-        this.Data = this.Size; //set Data - new Uint8ClampedArray(this.Size...);
-        this.ImageData = undefined;
-        this.BackBufferContext = _BackBufferCotext;
-        this.CreateImage();
-    }
-    //RGBA set/get
-    set RGBA(_rgba){
-        this._RGBA = _rgba;
-    }
-    get RGBA(){
-        return this._RGBA;
-    }
-    //SizeX set/get
-    set SizeX(x){
-        this._SizeX = x;
-    }
-    get SizeX(){
-        return this._SizeX;
-    }
-    //SizeY set/get
-    set SizeY(y){
-        this._SizeY = y;
-    }
-    get SizeY(){
-        return this._SizeY;
-    }
-    //Size set/get
-    set Size([ValueX,ValueY]){
-        if(ValueX != undefined && ValueY != undefined){
-            this._Size = ValueX * ValueY;
-        }else{
-            this._Size = undefined;
-        }
-    }
-    set Size(Value){
-        if(Value != undefined){
-            this._Size = Value;
-        }
-    }
-    get Size(){
-        return this._Size;
-    }
-    //DATA set/get
-    set Data(DataSize){
-        const CountOfRgbaForEachColor = 4;
-        if(DataSize != undefined){
-            this._Data = new Uint8ClampedArray(DataSize * CountOfRgbaForEachColor);
-        }else{
-            this._Data = undefined;
-        }
-    }
-    get Data(){
-        return this._Data;
-    }
-    //Functions
-    async CreateImage(){
-        if(this.RGBA !== undefined){
-            let Data = this.Data;
-            for (let i = 0; i < Data.length; i += 4) {
-                Data[i] = this.RGBA.R; 
-                Data[i + 1] = this.RGBA.G;
-                Data[i + 2] = this.RGBA.B; 
-                Data[i + 3] = this.RGBA.A; 
+export class StoredImage{
+    constructor(_Width = 0, _Height = 0,Src = undefined,_Image= undefined){    
+        this.Image = _Image;
+        this.Loaded = false;
+        if(this.Image === undefined){
+            this.Image = new Image(_Width,_Height);
+            if(Src !== undefined){
+                this.Load(Src);
             }
-            this.ImageData = new ImageData(Data,this.SizeX); // this.SizeX - width of ImageData
+        }else{
+            this.Image = new Image(this.Image.width,this.Image.height);
+            this.Load(_Image.src);
         }
+    }
+    async Clone(_Width = this.Image.width,_Height = this.Image.height,_Src = this.Image.src, _Image = this.Image){
+        return new StoredImage(_Width,_Height,_Src, _Image);
+    }
+    async Load(Src){
+        await( async ()=>{
+            this.Image.onload = () =>{
+            }
+            this.Image.src = Src;
+        })();
+    }
+    async LoadFromColorImageData(ColorImageData){
+        //Resizing to make sure we take only our image
+        let PrevDomWidth = MainSceneBackBufferDOM.width;
+        let PrevDomHeight = MainSceneBackBufferDOM.height;
+        let PrevCTXWidth = MainSceneBackBufferContext.width;
+        let PrevCTXHeight = MainSceneBackBufferContext.height;
+        MainSceneBackBufferDOM.width = ColorImageData.SizeX;
+        MainSceneBackBufferDOM.height = ColorImageData.SizeY;
+        MainSceneBackBufferContext.width = ColorImageData.SizeX;
+        MainSceneBackBufferContext.height = ColorImageData.SizeY;
+        //Start copy
+        MainSceneBackBufferContext.putImageData(ColorImageData.GetImageData(),0,0);
+        this.Image = new Image(ColorImageData.SizeX,ColorImageData.SizeY);
+        this.Image.onload = () =>{
+            this.Loaded = true;
+        }
+        this.Image.src = MainSceneBackBufferDOM.toDataURL('image/png');
+
+        MainSceneBackBufferDOM.width = PrevDomWidth;
+        MainSceneBackBufferDOM.height = PrevDomHeight;
+        MainSceneBackBufferContext.width = PrevCTXWidth;
+        MainSceneBackBufferContext.height = PrevCTXHeight;
     }
     GetImage(){
-        return this.ImageData;
-    }
-}
-export class DeffaultImage{
-    constructor(ImgSrc = undefined,SizeX = undefined,SizeY = undefined){
-        this.SizeX = SizeX;
-        this.SizeY = SizeY;
-        this.Size = this.SizeX * this.SizeY;
-        this.ImageData;
-        this.IsLoaded = false;
-        if(ImgSrc !== undefined){
-            this.CreateImage(ImgSrc);
-        }
-    }
-    //SizeX set/get
-    set SizeX(x){
-        this._SizeX = x;
-    }
-    get SizeX(){
-        return this._SizeX;
-    }
-    //SizeY set/get
-    set SizeY(y){
-        this._SizeY = y;
-    }
-    get SizeY(){
-        return this._SizeY;
-    }
-    //Size set/get
-    set Size([ValueX,ValueY]){
-        if(ValueX != undefined && ValueY != undefined){
-            this._Size = ValueX * ValueY;
-        }else{
-            this._Size = undefined;
-        }
-    }
-    set Size(Value){
-        if(Value != undefined){
-            this._Size = Value;
-        }
-    }
-    get Size(){
-        return this._Size;
-    }
-    //ImageData set/get
-    set ImageData(NewImageData){
-        this._ImageData = NewImageData;
-    }
-    get ImageData(){
-        return this._ImageData;
-    }
-    //IsLoaded set/get
-    set IsLoaded(State){
-        this._IsLoaded = State;
-    }
-    get IsLoaded(){
-        return this._IsLoaded;
-    }
-    //Functions
-    async CreateImage(Img,ImageWidth = this.SizeX,ImageHeight = this.SizeY){
-            //ImageWidth - use this to scale by width
-            //ImageHeight - use this to scale by hegiht
-            this.BackBufferContext.drawImage(Img,0,0,ImageWidth,ImageHeight);
-            this.ImageData = this.BackBufferContext.getImageData(0, 0, this.SizeX, this.SizeY);
-            this.BackBufferContext.clearRect(0,0,this.SizeX, this.SizeY);
-            this.IsLoaded = true;;
-    }
-    GetImage(){
-        if(this.IsLoaded){
-            return this.ImageData;
-        }else{
-            return "not loaded";
-        }
+        return this.Image;
     }
 }
 

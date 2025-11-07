@@ -4,8 +4,9 @@ import * as CONST from "./GameJS/LOCAL.mjs"
 //Starting Game When All Loaded
 document.addEventListener('DOMContentLoaded', async ()=> {
     //Loading our Constants
-    await CONST.LoadAllDynamicConstants();
-	let PlayerObject = new ENGINE.Object(ENGINE.CONST.GreenTexture,0,0,0,0);
+	await ENGINE.CONST.CreateGraphicsConstants();
+	const PlayerTexture = new ENGINE.Graphics.Texture(ENGINE.CONST.GreenImage,ENGINE.CONST.GreenImage.Image.width,ENGINE.CONST.GreenImage.height);
+	let PlayerObject = new ENGINE.Object(PlayerTexture,0,0,0,0);
 	
 	class PlayerInput extends ENGINE.Input{
 		constructor(){
@@ -61,6 +62,8 @@ document.addEventListener('DOMContentLoaded', async ()=> {
 	const [SizeY,SizeX] = [64,64];
 	const Tiles = new Array(SizeY);
 	await(async ()=>{
+		let BlackTexture = new ENGINE.Graphics.Texture(ENGINE.CONST.BlackImage,ENGINE.CONST.BlackImage.SizeY,ENGINE.CONST.BlackImage.SizeX);
+		let WhiteTexture = new ENGINE.Graphics.Texture(ENGINE.CONST.WhiteImage,ENGINE.CONST.WhiteImage.SizeY,ENGINE.CONST.WhiteImage.SizeX);
 		for(let y = 0; y < SizeY;y++){
 			Tiles[y] = new Array(SizeX);
 		}
@@ -87,29 +90,21 @@ document.addEventListener('DOMContentLoaded', async ()=> {
 			this.Rect = _Rect;
 		}
 	}
-	const CTX = ENGINE.CONST.MainSceneContext;
-	CTX.width = 3000;
-	CTX.height = 3000;
+	const MainContext = ENGINE.CONST.MainSceneContext;
+	const BackContext = ENGINE.CONST.MainSceneBackBufferContext;
+	const BackCanvas = ENGINE.CONST.MainSceneBackBufferDOM;
+	MainContext.width = 4096;
+	MainContext.height = 4096;
+	BackContext.width = 4096;
+	BackContext.height = 4096;
 	const PlayerViewPort = new ViewPort(new ENGINE.Rectangle(0,0,300,300));
 	const MapRect = new ENGINE.Rectangle(0,0,4096,4096);
-	let DomDifY = CTX.canvas.height / PlayerViewPort.Rect.Height;
-	let DomDifX = CTX.canvas.width / PlayerViewPort.Rect.Width;
+	let DomDifY = MainContext.canvas.height / PlayerViewPort.Rect.Height;
+	let DomDifX = MainContext.canvas.width / PlayerViewPort.Rect.Width;
 	let Background = new ENGINE.TileMapStatic([SizeY,SizeX],[SizeY,SizeX],Tiles);
 	let BackgroundRender = new ENGINE.Render(Background,BackgroundRenderFunction,PlayerObject);
 	async function BackgroundRenderFunction(Background,PlayerObject){
-		let StartX = PlayerObject.PositionX - (PlayerViewPort.Rect.Width / 2);
-		let StartY = PlayerObject.PositionY - (PlayerViewPort.Rect.Height / 2); 
-		let EndX = PlayerObject.PositionX + (PlayerViewPort.Rect.Width / 2);
-		let EndY = PlayerObject.PositionY + (PlayerViewPort.Rect.Height / 2);
-		let ScaleX = PlayerViewPort.Rect.Width * DomDifX;
-		let ScaleY = PlayerViewPort.Rect.Height * DomDifY;
-		console.log(StartX,StartY)
-		console.log(EndX,EndY)
-		console.log(DomDifX,DomDifY)
-		CTX.putImageData(Background.StaticImage,
-			0,0,
-			300,300,
-			ScaleX,ScaleY);
+		MainContext.drawImage(Background.StaticImage.Image);
 	}
 	await Background.Create();
 	let Player1 = new Player(PlayerObject,PlayerViewPort,Input);
@@ -117,19 +112,16 @@ document.addEventListener('DOMContentLoaded', async ()=> {
 
 	let TimeStamp = 0;
 	let LastTimestamp =  0;
-	Player1.Obj.PositionX = 0;
-	Player1.Obj.PositionY = 0;
-	CTX.translate(16,16);
-	console.log(CTX)
 	async function GameLoop(Timestamp) {
 		const deltaTime = Timestamp - LastTimestamp;
 		LastTimestamp = Timestamp;
 		//GameLogic
 		Player1.Move(deltaTime);
 		//Graphic Render
-		CTX.clearRect(0,0,CTX.canvas.width,CTX.canvas.Height);
-		//await BackgroundRender.Render();
-		CTX.putImageData(Player1.Obj.GetTexture(),Player1.Obj.PositionX,Player1.Obj.PositionY);
+		const angleInDegrees = 45; // or your desired angle
+		//MainContext.rotate((45 * Math.PI) / 180);
+		await BackgroundRender.Render();
+		MainContext.drawImage(Player1.Obj.GetTexture(),0,0);
 		Timestamp = new Date().getTime();
 		setTimeout(()=>{requestAnimationFrame(GameLoop)},100); //Looping loop
 	}
