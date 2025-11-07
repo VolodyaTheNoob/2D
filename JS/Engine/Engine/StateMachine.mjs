@@ -3,7 +3,7 @@
 //But in real case we already have player input from outer functions - so this case can be simplify,
 //for example - we call Click and take Input from variable - so we just process one function in click and after change state
 //Its just prototype for me - will use something like this in future
-class LadderStateMachine{ //LeverageStateMachine
+export class LadderStateMachine{ //LeverageStateMachine
         constructor(){
             this.State = "Idle"; //CurrentState
             this.Translations = { //AviableTransaltions for each State - with innenr Tralnslation functions
