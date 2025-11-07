@@ -7,6 +7,9 @@ constructor(_Left = 0,_Top = 0,_Width = 0,_Height = 0){
     this.Right = this.Left + this.Width;
     this.Bottom = this.Top + this.Height;
 }
+Clone(){
+    return new Rectangle(this.Left = 0,this.Top = 0,this.Width = 0,this.Height = 0);
+}
 Set(_Left = 0,_Top = 0,_Width = 0,_Height = 0){
     this.Left = _Left;
     this.Top = _Top;
