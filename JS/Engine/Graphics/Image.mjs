@@ -2,13 +2,14 @@ import { RGBA } from "./RGBA.mjs";
 import { MainSceneBackBufferID,MainSceneBackBufferDOM,MainSceneBackBufferContext} from "../Constants.mjs";
 
 export class ColorImage{
-    constructor(_RGBA = undefined,_SizeY = undefined,_SizeX = undefined){
+    constructor(_RGBA = undefined,_SizeY = undefined,_SizeX = undefined,_BackBufferCotext = MainSceneBackBufferContext){
         this.RGBA = _RGBA; //RGBA Class
         this.SizeX = _SizeX;
         this.SizeY = _SizeY;
         this.Size = this.SizeX * this.SizeY;
         this.Data = this.Size; //set Data - new Uint8ClampedArray(this.Size...);
         this.ImageData = undefined;
+        this.BackBufferContext = _BackBufferCotext;
         this.CreateImage();
     }
     //RGBA set/get
@@ -136,9 +137,9 @@ export class DeffaultImage{
     async CreateImage(Img,ImageWidth = this.SizeX,ImageHeight = this.SizeY){
             //ImageWidth - use this to scale by width
             //ImageHeight - use this to scale by hegiht
-            MainSceneBackBufferContext.drawImage(Img,0,0,ImageWidth,ImageHeight);
-            this.ImageData = MainSceneBackBufferContext.getImageData(0, 0, this.SizeX, this.SizeY);
-            MainSceneBackBufferContext.clearRect(0,0,this.SizeX, this.SizeY);
+            this.BackBufferContext.drawImage(Img,0,0,ImageWidth,ImageHeight);
+            this.ImageData = this.BackBufferContext.getImageData(0, 0, this.SizeX, this.SizeY);
+            this.BackBufferContext.clearRect(0,0,this.SizeX, this.SizeY);
             this.IsLoaded = true;;
     }
     GetImage(){
