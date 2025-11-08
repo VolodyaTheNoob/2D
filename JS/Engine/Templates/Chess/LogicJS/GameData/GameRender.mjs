@@ -5,7 +5,7 @@ export function RenderTileMap(TileMap){
     let _TileMap = TileMap.GetTiles();
     for(let y = 0; y < TileMap.SizeY;y++){
         for(let x = 0; x < TileMap.SizeX;x++){
-            ENGINE.CONST.MainSceneContext.putImageData(_TileMap[y][x].GetTexture(),_TileMap[y][x].CoordinatesX, _TileMap[y][x].CoordinatesY);
+            ENGINE.CONST.MainSceneContext.putImageData(_TileMap[y][x].Texture.Image.ImageData,_TileMap[y][x].CoordinatesX, _TileMap[y][x].CoordinatesY);
         }
     }
 }
@@ -16,9 +16,9 @@ export function SmartRender(ChessPieces,TileMap){
     for(let y = 0; y < ChessPieces.SizeY;y++){
         for(let x = 0; x < ChessPieces.SizeX;x++){
             if(_ChessPieces[y][x] !== undefined){
-                let CurrentTileImageData = _TileMap[y][x].GetTexture();
+                let CurrentTileImageData = _TileMap[y][x].Texture.Image.ImageData;
                 let CurrentTileColor = [CurrentTileImageData.data[0],CurrentTileImageData.data[1],CurrentTileImageData.data[2],CurrentTileImageData.data[3]];
-                let PieceImageData = _ChessPieces[y][x].GetTexture();
+                let PieceImageData = _ChessPieces[y][x].Texture.Image.ImageData;
                 PieceImageData = BackgroundChanger(CurrentTileColor,PieceImageData,[_ChessPieces[y][x].SizeX,_ChessPieces[y][x].SizeY]);
                 ENGINE.CONST.MainSceneContext.putImageData(PieceImageData,_ChessPieces[y][x].CoordinatesX, _ChessPieces[y][x].CoordinatesY);
             }

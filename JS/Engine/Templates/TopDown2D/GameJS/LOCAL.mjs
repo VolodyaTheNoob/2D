@@ -17,10 +17,11 @@ export async function LoadAllDynamicConstants(){
 }
 
 export const [CanvasSizeY, CanvasSizeX] = [400,600];//Canvas height/width
+export const [PlayerStartPositionY,PlayerStartPositionX] = [CanvasSizeY/2,CanvasSizeX/2]
 export const [MapSizeY,MapSizeX] = [_Map.MapSizeY, _Map.MapSizeX];
 export const MapSizeLength = MapSizeY * MapSizeX;
 export const [ScaleY,ScaleX] = [1,1];
-export const [PlayerViewportDistanceY,PlayerViewportDistanceX] = [200,300];
+export const [PlayerViewportDistanceY,PlayerViewportDistanceX] = [CanvasSizeY/2,CanvasSizeX/2];
 export const [TileSizeY,TileSizeX] = [_Map.TileSizeY, _Map.TileSizeX];//Default Size Of Everything
 export const Map = _Map;
 
@@ -92,7 +93,7 @@ export async function BackgroundRenderFunction(Background,Player){
 
 export async function CreatePlayerData(){
     PlayerTexture = new ENGINE.Graphics.Texture(GreenImage,GreenImage.Image.width,GreenImage.Image.height)
-    PlayerObject = new ENGINE.Object(PlayerTexture,0,0,0,0);
+    PlayerObject = new ENGINE.Object(PlayerTexture,PlayerStartPositionY,PlayerStartPositionX,0,0);
     Player1Input = new PlayerInput();
 	Player1Input.AddEventFunction("keydown",PlayerKeyboardDown,Player1Input);
 	Player1Input.AddEventFunction("keyup",PlayerKeyboardUP,Player1Input);

@@ -1,3 +1,5 @@
+import { MainSceneBackBufferContext } from "../Constants.mjs";
+
 export class ColorImageData{
     constructor(_RGBA = undefined,_SizeY = undefined,_SizeX = undefined,_ImageData = undefined){
         this.RGBA = _RGBA; //RGBA Class
@@ -152,9 +154,9 @@ export class StoredImageData{
     async CreateImageData(Img,ImageWidth = this.SizeX,ImageHeight = this.SizeY){
             //ImageWidth - use this to scale by width
             //ImageHeight - use this to scale by hegiht
-            this.BackBufferContext.drawImage(Img,0,0,ImageWidth,ImageHeight);
-            this.ImageData = this.BackBufferContext.getImageData(0, 0, this.SizeX, this.SizeY);
-            this.BackBufferContext.clearRect(0,0,this.SizeX, this.SizeY);
+            MainSceneBackBufferContext.drawImage(Img,0,0,ImageWidth,ImageHeight);
+            this.ImageData = MainSceneBackBufferContext.getImageData(0, 0, this.SizeX, this.SizeY);
+            MainSceneBackBufferContext.clearRect(0,0,this.SizeX, this.SizeY);
             this.IsLoaded = true;;
     }
     GetImageData(){
