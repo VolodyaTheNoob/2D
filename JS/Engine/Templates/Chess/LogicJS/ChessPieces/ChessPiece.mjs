@@ -1,7 +1,7 @@
 import * as ENGINE from "../../EngineImports.mjs"; 
 import * as LOCALCONST from "../GameData/LocalConstants.mjs";
 
-export class ChessPiece extends ENGINE.Sprite{
+export class ChessPiece extends ENGINE.Graphics.Sprite{
     constructor(SpriteTexture = undefined,PosY = undefined,PosX = undefined,CoordY = undefined,CoordX = undefined,_Team = undefined,_Type = undefined){
         super(SpriteTexture,PosY,PosX,CoordY,CoordX);
         this.Team = _Team;

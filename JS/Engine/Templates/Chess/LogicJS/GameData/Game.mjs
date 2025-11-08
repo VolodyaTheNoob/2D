@@ -27,8 +27,8 @@ export class Game{
         this.Player1 = Player1;
         this.Player2 = Player2;
         this.ChessBoard = new Board(BackgroundTileMap,GameObjectsTileMap);
-        this.BackgroundRender = new ENGINE.Render(this.ChessBoard.BoardTileMap,RenderFunctions.RenderTileMap,undefined);
-        this.ObjectsRender = new ENGINE.Render(this.ChessBoard.ObjectsTileMap,RenderFunctions.SmartRender,this.ChessBoard.BoardTileMap);
+        this.BackgroundRender = new ENGINE.Render(this.ChessBoard.BoardTileMap,RenderFunctions.RenderTileMap,[this.ChessBoard.BoardTileMap]);
+        this.ObjectsRender = new ENGINE.Render(this.ChessBoard.ObjectsTileMap,RenderFunctions.SmartRender,[this.ChessBoard.BoardTileMap]);
         this.Teams = [Player1.GameData.Team,Player2.GameData.Team];
         /*
             I guess if I will go further - I will add new abstractions here
@@ -119,7 +119,7 @@ export class Game{
 
     async AddVisualToInput(){
         const PickedPieceBackgroundColor = [238,232,170,128];
-        let PieceImageData = RenderFunctions.BackgroundChanger(PickedPieceBackgroundColor,await this.CurrentPlayerFocusedTile.GetTexture(),[this.CurrentPlayerFocusedTile.SizeX,this.CurrentPlayerFocusedTile.SizeY]);
+        let PieceImageData = RenderFunctions.BackgroundChanger(PickedPieceBackgroundColor,await this.CurrentPlayerFocusedTile.Texture.Image.ImageData,[this.CurrentPlayerFocusedTile.SizeX,this.CurrentPlayerFocusedTile.SizeY]);
         ENGINE.CONST.MainSceneContext.putImageData(PieceImageData,this.CurrentPlayerFocusedTile.CoordinatesX, this.CurrentPlayerFocusedTile.CoordinatesY);
     }
 
