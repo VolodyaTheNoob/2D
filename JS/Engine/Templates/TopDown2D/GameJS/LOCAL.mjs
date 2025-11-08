@@ -2,6 +2,19 @@ import * as ENGINE from "../EngineImports.mjs";
 import {PlayerInput,PlayerKeyboardDown,PlayerKeyboardUP} from "./Player/PlayerInput.mjs"
 import { Player } from "./Player/Player.mjs";
 import * as _Map from "./World/Map.mjs";
+import { ModuleLoader } from "../../../AsyncModuleLoader.mjs";
+
+export const ConstantsLoader = new ModuleLoader("./Graphics/Graphics.mjs",ENGINE.CONST.CreateGraphicsConstants);
+export const ConstantsModulePromise = ConstantsLoader.LoadModule;
+
+export async function LoadAllDynamicConstants(){
+    try{
+        await ConstantsLoader.LoadModule();
+        await CreateWorldData();
+    }catch(error){
+        console.log(error);
+    }
+}
 
 export const Map = _Map;
 
@@ -14,7 +27,7 @@ BackContext.width = 4096;
 BackContext.height = 4096;
 
 export const PlayerViewPort = new ENGINE.ViewPort(new ENGINE.Rectangle(0,0,600,400));
-export const MapRect = new ENGINE.Rectangle(0,0,4096,4096);
+export const MapRect = new ENGINE.Rectangle(0,0,4096-364,4096-264);
 export const [SizeY,SizeX] = [_Map.SizeY,_Map.SizeX];
 
 export let GreenColor;
@@ -45,11 +58,7 @@ export async function BackgroundRenderFunction(Background,Player){
 }	
 
 export async function CreatePlayerData(){
-    GreenColor = ENGINE.CONST.GreenColor;
-    GreenImageData = ENGINE.CONST.GreenImageData;
-    GreenImage = ENGINE.CONST.GreenImage;
-    console.log(ENGINE.CONST.GreenImage)
-    PlayerTexture = new ENGINE.Graphics.Texture(GreenImage,GreenImage.Image.width,GreenImage.height)
+    PlayerTexture = new ENGINE.Graphics.Texture(ENGINE.CONST.GreenImage,ENGINE.CONST.GreenImage.Image.width,ENGINE.CONST.GreenImage.Image.height)
     PlayerObject = new ENGINE.Object(PlayerTexture,0,0,0,0);
     Player1Input = new PlayerInput();
 	Player1Input.AddEventFunction("keydown",PlayerKeyboardDown,Player1Input);
@@ -66,7 +75,6 @@ export async function CreateMapData() {
 }
 
 export async function CreateWorldData(){
-    await ENGINE.CONST.CreateGraphicsConstants();
     await CreatePlayerData();
     await CreateMapData();
 }

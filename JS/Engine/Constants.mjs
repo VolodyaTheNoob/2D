@@ -41,6 +41,7 @@ export let BlueImageData;
 export let BlueImage;
 export let BlueTexture;
 
+export const ConstantsLoader = new ModuleLoader("./Graphics/Graphics.mjs",CreateGraphicsConstants);
 export async function CreateGraphicsConstants() {
     //Creating WhiteSquareTexture
     WhiteColor = new Graphics.RGBA(255,255,255,255);
