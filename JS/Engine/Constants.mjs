@@ -73,3 +73,4 @@ export async function CreateGraphicsConstants() {
     await BlueImage.LoadFromColorImageData(BlueImageData);
     BlueTexture = new Graphics.Texture(BlueImage,SizeX,SizeY);
 }
+
