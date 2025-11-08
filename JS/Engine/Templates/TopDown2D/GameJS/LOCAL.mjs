@@ -70,6 +70,5 @@ export async function CreateWorldData(){
     await CreatePlayerData();
     await CreateMapData();
 }
-await CreateWorldData();
 
 

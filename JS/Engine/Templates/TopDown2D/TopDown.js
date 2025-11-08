@@ -1,8 +1,13 @@
 import * as ENGINE from "./EngineImports.mjs"
 import * as CONST from "./GameJS/LOCAL.mjs"
 
+await ENGINE.CONST.CreateGraphicsConstants();
+
 //Starting Game When All Loaded
 document.addEventListener('DOMContentLoaded', async ()=> {
+	await ENGINE.CONST.CreateGraphicsConstants();
+	await CONST.CreatePlayerData();
+	await CONST.CreateMapData();
 	let TimeStamp = 0;
 	let LastTimestamp =  0;
 	async function GameLoop(Timestamp) {
