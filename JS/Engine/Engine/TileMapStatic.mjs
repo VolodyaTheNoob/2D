@@ -8,7 +8,7 @@ export class TileMapStatic extends TileMap{
         super(TileSize,TileMapSize, Tiles);
         this.StaticImage;
     }
-    async Create(){
+    async CreateStatic(){
         //Creating static background
         let PrevCtxWidth = MainSceneBackBufferContext.width;
         let PrevCtxHeight = MainSceneBackBufferContext.height;
