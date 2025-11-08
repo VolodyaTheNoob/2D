@@ -1,32 +1,34 @@
 import * as ENGINE from "../../EngineImports.mjs";   
+import * as LOCAL from "../LOCAL.mjs"
 
-export const [SizeY,SizeX] = [64,64];
+export const [MapSizeY,MapSizeX] = [16,16];
+export const [TileSizeY,TileSizeX] = [64,64];
 export let Tiles;
 export let Background;
 
 export let BlackTexture;
 export let WhiteTexture;
 export async function CreateMapTiles(){
-    Tiles = new Array(SizeY);
-    Background = new ENGINE.TileMapStatic([SizeY,SizeX],[SizeY,SizeX],Tiles);
-    BlackTexture = new ENGINE.Graphics.Texture(ENGINE.CONST.BlackImage,SizeY,SizeX);
-    WhiteTexture = new ENGINE.Graphics.Texture(ENGINE.CONST.WhiteImage,SizeY,SizeX);
-    for(let y = 0; y < SizeY;y++){
-        Tiles[y] = new Array(SizeX);
+    Tiles = new Array(MapSizeY);
+    Background = new ENGINE.TileMapStatic([TileSizeY,TileSizeX],[MapSizeY,MapSizeX],Tiles);
+    BlackTexture = new ENGINE.Graphics.Texture(LOCAL.BlackImage,TileSizeY,TileSizeX);
+    WhiteTexture = new ENGINE.Graphics.Texture(LOCAL.WhiteImage,TileSizeY,TileSizeX);
+    for(let y = 0; y < MapSizeY;y++){
+        Tiles[y] = new Array(MapSizeX);
     }
-    for(let y = 0; y < SizeY;y++){
-        for(let x = 0; x < SizeX;x++){
+    for(let y = 0; y < MapSizeY;y++){
+        for(let x = 0; x < MapSizeX;x++){
             if(y % 2 == 0){
                 if(x % 2 == 0){
-                    Tiles[y][x] = new ENGINE.Tile(ENGINE.CONST.BlackTexture,SizeY * y,SizeX * x,y,x);
+                    Tiles[y][x] = new ENGINE.Tile(LOCAL.BlackTexture,TileSizeY * y,TileSizeX * x,y,x);
                 }else{
-                    Tiles[y][x] = new ENGINE.Tile(ENGINE.CONST.WhiteTexture,SizeY * y,SizeX * x,y,x);
+                    Tiles[y][x] = new ENGINE.Tile(LOCAL.WhiteTexture,TileSizeY * y,TileSizeX * x,y,x);
                 }
             }else{
                 if(x % 2 == 0){
-                    Tiles[y][x] = new ENGINE.Tile(ENGINE.CONST.WhiteTexture,SizeY * y,SizeX * x,y,x);
+                    Tiles[y][x] = new ENGINE.Tile(LOCAL.WhiteTexture,TileSizeY * y,TileSizeX * x,y,x);
                 }else{
-                    Tiles[y][x] = new ENGINE.Tile(ENGINE.CONST.BlackTexture,SizeY * y,SizeX * x,y,x);
+                    Tiles[y][x] = new ENGINE.Tile(LOCAL.BlackTexture,TileSizeY * y,TileSizeX * x,y,x);
                 }
             }
         }
