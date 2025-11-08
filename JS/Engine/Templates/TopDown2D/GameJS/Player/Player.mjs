@@ -1,7 +1,7 @@
 export class Player{
 		constructor(_Obj,_ViewPort= undefined,_Cam = undefined,_Input,_WorldBorders){
 			this.Obj = _Obj;
-			this.Speed = 128; //1 sec speed in Pixels
+			this.Speed = 1280; //1 sec speed in Pixels
 			this.ViewPort = _ViewPort
 			this.WorldBorders =_WorldBorders;
 			this.Cam = _Cam;
@@ -33,7 +33,8 @@ export class Player{
 				}
 				if(this.Input.LastKey === "S"){
 					this.Obj.PositionY += this.Speed * Time;
-					if(this.Obj.PositionY > this.WorldBorders.Bottom){
+					console.log(this.Obj.PositionY,this.WorldBorders.Bottom)
+					if(this.Obj.PositionY >= this.WorldBorders.Bottom){
 						this.Obj.PositionY = this.WorldBorders.Bottom;
 					}
 				}
